@@ -1,0 +1,50 @@
+package Model;
+
+import java.time.LocalDateTime;
+
+public class HistorialClinico {
+
+    private int idHistorialClinico;
+    private int idPaciente;
+    private LocalDateTime fechaCreacion;
+    private String grupoSanguineo;
+
+    public HistorialClinico(int idHistorialClinico, int idPaciente, LocalDateTime fechaCreacion, String grupoSanguineo) {
+        this.idHistorialClinico = idHistorialClinico;
+        this.idPaciente = idPaciente;
+        this.fechaCreacion = fechaCreacion;
+        this.grupoSanguineo = grupoSanguineo;
+    }
+
+    public int getIdHistorialClinico() {
+        return idHistorialClinico;
+    }
+
+    public void setIdHistorialClinico(int idHistorialClinico) {
+        this.idHistorialClinico = idHistorialClinico;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getGrupoSanguineo() {
+        return grupoSanguineo;
+    }
+
+    public void setGrupoSanguineo(String grupoSanguineo) {
+        this.grupoSanguineo = grupoSanguineo;
+    }
+}

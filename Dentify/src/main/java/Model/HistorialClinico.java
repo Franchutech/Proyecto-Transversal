@@ -1,15 +1,16 @@
 package Model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class HistorialClinico {
 
     private int idHistorialClinico;
     private int idPaciente;
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
     private String grupoSanguineo;
 
-    public HistorialClinico(int idHistorialClinico, int idPaciente, LocalDateTime fechaCreacion, String grupoSanguineo) {
+    public HistorialClinico(int idHistorialClinico, int idPaciente, LocalDate fechaCreacion, String grupoSanguineo) {
         this.idHistorialClinico = idHistorialClinico;
         this.idPaciente = idPaciente;
         this.fechaCreacion = fechaCreacion;
@@ -32,11 +33,11 @@ public class HistorialClinico {
         this.idPaciente = idPaciente;
     }
 
-    public LocalDateTime getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 

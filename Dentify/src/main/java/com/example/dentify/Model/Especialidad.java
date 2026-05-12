@@ -1,4 +1,4 @@
-package Model;
+package com.example.dentify.Model;
 
 public enum Especialidad  {
 

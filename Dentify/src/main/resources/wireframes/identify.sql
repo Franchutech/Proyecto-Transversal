@@ -209,6 +209,7 @@ INSERT INTO DETALLE_CITA (id_cita, id_tratamiento, observaciones) VALUES
                                                                       (37, 3, 'Ajuste final.'), (38, 5, 'Control de placa.'),
                                                                       (39, 7, 'Diente 24.'), (40, 1, 'Profilaxis.');
 
+
 -- 10 CONSULTAS
 
 /*Muestra las citas programadas para una fecha específica, incluyendo el nombre del paciente y del doctor. Útil para la vista diaria de recepción. */
@@ -286,4 +287,5 @@ SELECT
 FROM HISTORIAL_CLINICO H
          JOIN PACIENTE P ON H.id_paciente = P.id_paciente
 ORDER BY H.id_historial_clinico;
+
 

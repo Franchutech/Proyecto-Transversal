@@ -36,10 +36,10 @@ public class SQLDataBaseManager {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("🔒 [Database] Conexión cerrada: ¡Dientes limpios y servidor feliz!");
+                System.out.println("[Database] Conexión cerrada: ¡Dientes limpios y servidor feliz!");
             }
         } catch (SQLException e) {
-            System.err.println("❌ Error al hacer la limpieza (cerrar conexión): " + e.getMessage());
+            System.err.println("Error al hacer la limpieza (cerrar conexión): " + e.getMessage());
         }
     }
 }

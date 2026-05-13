@@ -20,7 +20,7 @@
          <children>
             <Button fx:id="btnVolver" prefHeight="57.0" prefWidth="62.0" styleClass="back-button">
                <graphic>
-                  <ImageView fitHeight="106.0" fitWidth="102.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="btnFlechaVolver" fitHeight="106.0" fitWidth="102.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/volver.png" />
                      </image>

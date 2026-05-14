@@ -160,4 +160,41 @@ public class CitaDAO {
     return lista;
 }
 
+public DetalleCita obtenerDetalleDeCita(int idCita) {
+    String sql = "SELECT * FROM detalle_cita WHERE id_cita = ?";
+    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        pstmt.setInt(1, idCita);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                DetalleCita detalle = new DetalleCita();
+                detalle.setIdDetalleCita(rs.getInt("id_detalle"));
+                detalle.setIdCita(rs.getInt("id_cita"));
+                detalle.setIdTratamiento(rs.getInt("id_tratamiento"));
+                detalle.setObservaciones(rs.getString("observaciones"));
+                return detalle;
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener el detalle: " + e.getMessage());
+    }
+    return null;
+}
+
+
+//Si se ocupara saber las citas para ese dìa en concreto (el dìa de hoy)
+
+public int contarCitasHoy() {
+    String sql = "SELECT COUNT(*) FROM cita WHERE fecha = CURDATE()";
+    try (Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al contar citas: " + e.getMessage());
+    }
+    return 0;
+}
+
+
 }//CIERRE CITA DAO

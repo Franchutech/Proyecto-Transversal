@@ -14,6 +14,10 @@ public class DetalleCita {
         this.observaciones = observaciones;
     }
 
+    public DetalleCita() {
+    // Constructor vacío para que el DAO pueda instanciarlo y luego usar los setters
+}
+
     public int getIdDetalleCita() {
         return idDetalleCita;
     }

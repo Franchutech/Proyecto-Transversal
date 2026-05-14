@@ -14,6 +14,10 @@ public class DetalleCita {
         this.observaciones = observaciones;
     }
 
+    public DetalleCita() {
+    // Constructor vacío para que el DAO pueda instanciarlo y luego usar los setters
+}
+
     public int getIdDetalleCita() {
         return idDetalleCita;
     }
@@ -45,4 +49,14 @@ public class DetalleCita {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+
+@Override
+public String toString() {
+    return "DetalleCita{" +
+            "idDetalle=" + idDetalleCita +
+            ", idTratamiento=" + idTratamiento +
+            ", observaciones='" + observaciones + '\'' +
+            '}';
+}
+
 }

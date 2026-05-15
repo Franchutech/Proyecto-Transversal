@@ -31,7 +31,7 @@ CREATE TABLE PACIENTE (
                           nombre VARCHAR(100),
                           apellido VARCHAR(100),
                           telefono VARCHAR(20),
-                          correo_electronico VARCHAR(20),
+                          correo_electronico VARCHAR(100),
                           fecha_nacimiento DATE
 );
 
@@ -110,35 +110,52 @@ INSERT INTO TRATAMIENTO (nombre, descripcion) VALUES
 
 
 INSERT INTO DOCTOR (id_doctor, nombre, id_especialidad, fecha_nacimiento, direccion, numero_colegiado) VALUES
-                                                                                                           (101, 'Dr. Alberto Ruiz', 4, '1985-04-12', 'Calle Mayor 10, Madrid', 'COL-282801'), -- CIRUGIA
-                                                                                                           (102, 'Dra. Elena Beltrán', 2, '1988-11-20', 'Av. Libertad 5, Barcelona', 'COL-080802'), -- ENDODONCISTA
-                                                                                                           (103, 'Dr. Carlos Soler', 3, '1979-01-30', 'Calle Luna 45, Valencia', 'COL-464603'), -- ORTODONCISTA
-                                                                                                           (104, 'Dra. Sofía Méndez', 1, '1992-06-15', 'Plaza España 2, Sevilla', 'COL-414104'), -- GENERAL
-                                                                                                           (105, 'Dr. Jorge Valdivia', 5, '1983-09-05', 'Calle Real 12, Zaragoza', 'COL-505005'), -- PERIODONCISTA
+                                                                                                           (101, 'Dr. José Luis Argumosa', 4, '1985-04-12', 'Calle Mayor 10, Madrid', 'COL-282801'), -- CIRUGIA
+                                                                                                           (102, 'Dr. Khan Alí', 2, '1988-11-20', 'Av. Libertad 5, Barcelona', 'COL-080802'), -- ENDODONCISTA
+                                                                                                           (103, 'Dra. Marta Guzmán', 3, '1979-01-30', 'Calle Luna 45, Valencia', 'COL-464603'), -- ORTODONCISTA
+                                                                                                           (104, 'Dra. Estíbaliz Laya', 1, '1992-06-15', 'Plaza España 2, Sevilla', 'COL-414104'), -- GENERAL
+                                                                                                           (105, 'Dra. Erica Arenas', 5, '1983-09-05', 'Calle Real 12, Zaragoza', 'COL-505005'), -- PERIODONCISTA
                                                                                                            (106, 'Dra. Marina Costa', 1, '1990-12-01', 'Paseo Marítimo 8, Málaga', 'COL-292906'), -- GENERAL
-                                                                                                           (107, 'Dr. Samuel Paz', 4, '1975-03-22', 'Gran Vía 100, Bilbao', 'COL-484807'); -- CIRUGIA
+                                                                                                           (107, 'Dr. Pablo Jiménez', 4, '1975-03-22', 'Gran Vía 100, Bilbao', 'COL-484807'); -- CIRUGIA
 
 INSERT INTO PACIENTE (nombre, apellido, telefono, correo_electronico, fecha_nacimiento) VALUES
-                                                                                            ('Juan', 'García', '600111222', 'juan@mail.com', '1995-02-10'),
-                                                                                            ('Lucía', 'Martín', '600333444', 'lucia@mail.com', '1988-05-15'),
-                                                                                            ('Pedro', 'Gómez', '600555666', 'pedro@mail.com', '2001-08-20'),
-                                                                                            ('Ana', 'Sanz', '600777888', 'ana@mail.com', '1975-11-30'),
-                                                                                            ('David', 'López', '600999000', 'david@mail.com', '1992-04-05'),
-                                                                                            ('Marta', 'Fernández', '611222333', 'marta@mail.com', '1983-09-12'),
-                                                                                            ('Luis', 'Torres', '611444555', 'luis@mail.com', '1999-12-25'),
-                                                                                            ('Rosa', 'Díaz', '611666777', 'rosa@mail.com', '1968-07-18'),
+                                                                                            ('Oscar', 'Lanza', '632985963', 'oscar1@gmail.com', '2001-03-03'),
+                                                                                            ('Jeremis', 'Alexandre', '759862354', 'jeremis@gmail.com', '2003-08-07'),
+                                                                                            ('Andrea', 'Gutiérrez', '664819052', 'andrea@gmail.com', '2002-03-07'),
+                                                                                            ('Kevin', 'Martínez','695326854', 'kevin@gmail.com', '1996-02-02'),
+                                                                                            ('David', 'Valle', '658956985', 'david1@gmail.com', '1999-12-29'),
+                                                                                            ('Francella', 'Rojas', '659326589', 'francella@gmail.com', '1988-02-05'),
+                                                                                            ('Marco', 'Valiente', '752368549', 'marco@gmail.com', '2003-10-10'),
+                                                                                            ('Kevin David','Vasquez', '756985213', 'kevinv@gmail.com'),
+                                                                                            ('Camilo', 'Arone', '652120036', 'camilo@gmail.com', '2005-10-09'),
+                                                                                            ('Alejandra', 'Velasco', '621148965', 'alejandra@gmail.com', '2008-05-06'),
+                                                                                            ('Diego', 'Gómez', '652154789', 'diego@gmail.com', '2000-05-07'),
+                                                                                            ('Joaquín', 'Valentín', '685932742', 'joaquin@gmail.com', '2006-09-09'),
+                                                                                            ('Nahiomy', 'Julieta', '721456952', 'nahiomy@gmail.com', '2005-05-04'),
+                                                                                            ('Mario', 'Pila', '633255125', 'mario@gmail.com','1999-02-03'),
+                                                                                            ('Ruben', 'Calvo', '698523696', 'ruben@gmail.com', '2001-08-05'),
+                                                                                            ('Aaron', 'Díez', '652198759', 'aaron@gmail.com', '2004-06-06'),
+                                                                                            ('Juan', 'García', '600111222', 'juan@gmail.com', '1995-02-10'),
+                                                                                            ('Lucía', 'Martín', '600333444', 'lucia@gmail.com', '1988-05-15'),
+                                                                                            ('Pedro', 'Gómez', '600555666', 'pedro@gmail.com', '2001-08-20'),
+                                                                                            ('Ana', 'Sanz', '600777888', 'ana@gmail.com', '1975-11-30'),
+                                                                                            ('David', 'López', '600999000', 'david2@gmail.com', '1992-04-05'),
+                                                                                            ('Marta', 'Fernández', '611222333', 'marta@gmail.com', '1983-09-12'),
+                                                                                            ('Luis', 'Torres', '611444555', 'luis@gmail.com', '1999-12-25'),
+                                                                                            ('Rosa', 'Díaz', '611666777', 'rosa@gmail.com', '1968-07-18'),
                                                                                             ('Raúl', 'Castro', '611888999', 'raul@mail.com', '1990-01-14'),
-                                                                                            ('Elena', 'Vázquez', '622111222', 'elena@mail.com', '2005-06-22'),
-                                                                                            ('Pablo', 'Serrano', '622333444', 'pablo@mail.com', '1980-03-08'),
-                                                                                            ('Carla', 'Ibáñez', '622555666', 'carla@mail.com', '1994-10-27'),
-                                                                                            ('Hugo', 'Ramos', '622777888', 'hugo@mail.com', '1987-11-02'),
-                                                                                            ('Sara', 'Gil', '622999000', 'sara@mail.com', '2000-09-19'),
-                                                                                            ('Mario', 'Ortiz', '633111222', 'mario@mail.com', '1972-05-31'),
-                                                                                            ('Nerea', 'Moya', '633333444', 'nerea@mail.com', '1996-08-14'),
-                                                                                            ('Javier', 'Blanco', '633555666', 'javier@mail.com', '1989-12-04'),
-                                                                                            ('Irene', 'Rubio', '633777888', 'irene@mail.com', '1982-02-28'),
-                                                                                            ('Óscar', 'Marín', '633999000', 'oscar@mail.com', '2003-04-11'),
-                                                                                            ('Alba', 'Pérez', '644111222', 'alba@mail.com', '1991-07-07');
+                                                                                            ('Elena', 'Gutiérrez', '622111222', 'elena@gmail.com', '2005-06-22'),
+                                                                                            ('Pablo', 'Serrano', '622333444', 'pablo@gmail.com', '1980-03-08'),
+                                                                                            ('Carla', 'Ibáñez', '622555666', 'carla@gmail.com', '1994-10-27'),
+                                                                                            ('Hugo', 'Ramos', '622777888', 'hugo@gmail.com', '1987-11-02'),
+                                                                                            ('Sara', 'Gil', '622999000', 'sara@gmail.com', '2000-09-19'),
+                                                                                            ('Mario', 'Martínez', '633111222', 'mario@gmail.com', '1972-05-31'),
+                                                                                            ('Nerea', 'Moya', '633333444', 'nerea@gmail.com', '1996-08-14'),
+                                                                                            ('Javier', 'Blanco', '633555666', 'javier@gmail.com', '1989-12-04'),
+                                                                                            ('Irene', 'Rubio', '633777888', 'irene@gmail.com', '1982-02-28'),
+                                                                                            ('Óscar', 'Velasco', '633999000', 'oscar@gmail.com', '2003-04-11'),
+                                                                                            ('Alba', 'Pérez', '644111222', 'alba@gmail.com', '1991-07-07'),
+                                                                                            ('Elena','Fernández', '664819075', 'elena2@gmail.com', '2005-03-07');
 
 INSERT INTO HISTORIAL_CLINICO (id_paciente, fecha_creacion, grupo_sanguineo)
 SELECT id_paciente, '2026-01-10', ELT(FLOOR(RAND()*4) + 1, 'A+', 'B+', 'O+', 'AB-') FROM PACIENTE;
@@ -208,6 +225,7 @@ INSERT INTO DETALLE_CITA (id_cita, id_tratamiento, observaciones) VALUES
                                                                       (35, 6, 'Esmalte resistente.'), (36, 4, 'Sangrado normal.'),
                                                                       (37, 3, 'Ajuste final.'), (38, 5, 'Control de placa.'),
                                                                       (39, 7, 'Diente 24.'), (40, 1, 'Profilaxis.');
+
 
 -- 10 CONSULTAS
 
@@ -286,4 +304,5 @@ SELECT
 FROM HISTORIAL_CLINICO H
          JOIN PACIENTE P ON H.id_paciente = P.id_paciente
 ORDER BY H.id_historial_clinico;
+
 

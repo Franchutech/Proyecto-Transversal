@@ -1,5 +1,6 @@
 package com.example.dentify;
 
+import com.example.dentify.Model.Cita;
 import com.example.dentify.Model.Doctor;
 import com.example.dentify.Model.Paciente;
 import javafx.fxml.FXML;
@@ -13,6 +14,11 @@ public class DentifyController {
     @FXML private ChoiceBox<Paciente> choicePaciente;
     @FXML private ChoiceBox<Doctor> choiceDoctor;
     @FXML private ComboBox<String> cboHora;
+    @FXML private Label lblTituloCita;
+    @FXML private Button btnGuardarCita;
+    @FXML private DatePicker DatePickerFecha;
+    @FXML private TextArea txtMotivo;
+
 
     // ------ Elementos de Pacientes (Formulario) ------
     @FXML private Label lblTituloFormulario;
@@ -29,6 +35,7 @@ public class DentifyController {
 
     // Objeto auxiliar para saber si estamos editando
     private Paciente pacienteAEditar = null;
+    private Cita  citaAEditar = null;
 
     @FXML
     public void initialize() {
@@ -78,7 +85,7 @@ public class DentifyController {
         });
     }
 
-    // ------ Logica de Pacientes ------
+    // ------ Gestión pacientes ------
 
     public void prepararEdicion(Paciente p) {
         this.pacienteAEditar = p;
@@ -130,4 +137,17 @@ public class DentifyController {
         tablaPacientes.getItems().setAll(lista);
     }
     */
+
+
+    // Gestión citas
+
+    public void prepararEdicionCita(Cita cita){
+        this.citaAEditar = cita;
+
+        lblTituloCita.setText("Editar cita #" + cita.getIdCita());
+        btnGuardarCita.setText("Guardar");
+
+        DatePickerFecha.setValue(cita.getFecha());
+        
+    }
 }

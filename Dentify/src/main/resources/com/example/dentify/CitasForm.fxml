@@ -33,7 +33,7 @@
                 </Button>
                 <VBox alignment="CENTER_LEFT">
                     <children>
-                        <Label fx:id="lblTituloFormulario" styleClass="title-main" text="Agregar cita"/>                    </children>
+                        <Label fx:id="lblTituloCita" styleClass="title-main" text="Agregar cita"/>                    </children>
                 </VBox>
             </children>
         </HBox>
@@ -61,7 +61,7 @@
                 <Label fx:id="labelMotivoC" text="Motivo de la cita" GridPane.rowIndex="4" />
             <Label fx:id="labelEstadoC" text="Estado" GridPane.rowIndex="5" />
             <DatePicker fx:id="DatePickerFecha" GridPane.columnIndex="1" />
-            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextArea fx:id="txtMotivo" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <ComboBox fx:id="cboHora" prefWidth="200" promptText="Seleccione hora" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <ChoiceBox fx:id="choiceBoxEstados" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                 <ChoiceBox fx:id="choicePaciente" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -70,7 +70,7 @@
         </GridPane>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
-                <Button fx:id="btnGuardar" contentDisplay="RIGHT" mnemonicParsing="false" styleClass="primary-button" stylesheets="@styles.css" text="Guardar" textAlignment="CENTER">
+                <Button fx:id="btnGuardarCita" contentDisplay="RIGHT" mnemonicParsing="false" styleClass="primary-button" stylesheets="@styles.css" text="Guardar" textAlignment="CENTER">
                     <HBox.margin>
                         <Insets left="600.0" top="20.0" />
                     </HBox.margin>

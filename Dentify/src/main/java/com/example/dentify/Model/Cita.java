@@ -4,30 +4,36 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Cita {
-    // AQUI DEFINO EL DETALLE
+
+    // ATRIBUTOS
     private int idCita;
     private LocalDate fecha;
     private LocalDateTime hora;
     private String motivo;
     private int idEstado;
-    private int idPaciente;
-    private int idDoctor;
 
-    // DECLARO LA VARIABLE
-    private DetalleCita detalle;
+    // ATRIBUTOS DE COMPOSICIÓN
+    private Paciente paciente;
+    private Doctor doctor;
 
-    // 2. CONSTRUCTOR
-    public Cita(int idCita, LocalDate fecha, LocalDateTime hora, String motivo, int idEstado, int idPaciente, int idDoctor) {
+    // CAMPOS INTEGRADOS DE DETALLE CITA
+    private int idTratamiento;
+    private String observaciones;
+
+    // CONSTRUCTOR
+    public Cita(int idCita, LocalDate fecha, LocalDateTime hora, String motivo, int idEstado, Paciente paciente, Doctor doctor, int idTratamiento, String observaciones) {
         this.idCita = idCita;
         this.fecha = fecha;
         this.hora = hora;
         this.motivo = motivo;
         this.idEstado = idEstado;
-        this.idPaciente = idPaciente;
-        this.idDoctor = idDoctor;
+        this.paciente = paciente;
+        this.doctor = doctor;
+        this.idTratamiento = idTratamiento;
+        this.observaciones = observaciones;
     }
 
-    // 3. GETTERS Y SETTERS
+    // GETTERS Y SETTERS
     public int getIdCita() { return idCita; }
     public void setIdCita(int idCita) { this.idCita = idCita; }
 
@@ -43,31 +49,32 @@ public class Cita {
     public int getIdEstado() { return idEstado; }
     public void setIdEstado(int idEstado) { this.idEstado = idEstado; }
 
-    public int getIdPaciente() { return idPaciente; }
-    public void setIdPaciente(int idPaciente) { this.idPaciente = idPaciente; }
+    // GETTERS Y SETTERS DE OBJETOS COMPLETOS
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
-    public int getIdDoctor() { return idDoctor; }
-    public void setIdDoctor(int idDoctor) { this.idDoctor = idDoctor; }
+    public Doctor getDoctor() { return doctor; }
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
-    // UNI CITA CON DETALLE DE CITA
-
-    public DetalleCita getDetalle() {
-        return detalle;
+    // MÉTODOS PUENTE PARA EVITAR ERRORES DE ID
+    // Estos devuelven el ID entrando en el objeto, así no rompes el código antiguo
+    public int getIdPaciente() {
+        return (paciente != null) ? paciente.getIdPaciente() : 0;
     }
 
-    public void setDetalle(DetalleCita detalle) {
-        this.detalle = detalle;
+    public int getIdDoctor() {
+        return (doctor != null) ? doctor.getIdDoctor() : 0;
     }
+
+    public int getIdTratamiento() { return idTratamiento; }
+    public void setIdTratamiento(int idTratamiento) { this.idTratamiento = idTratamiento; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
 
     // TOSTRING
-
-@Override
-public String toString() {
-    return "Cita{" +
-            "idCita=" + idCita +
-            ", fecha=" + fecha +
-            ", motivo='" + motivo + '\'' +
-            "\n    ┗━ DETALLE: " + (detalle != null ? detalle.toString() : "Sin detalle") +
-            "\n}";
-}
+    @Override
+    public String toString() {
+        return "Cita #" + idCita + " | Paciente: " + (paciente != null ? paciente.getNombre() : "N/A");
+    }
 }

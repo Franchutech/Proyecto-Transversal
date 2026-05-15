@@ -2,13 +2,13 @@ package com.example.dentify.dao;
 
 import com.example.dentify.Configuration.SQLDataBaseManager;
 import com.example.dentify.Model.Paciente;
+import com.mysql.cj.xdevapi.PreparableStatement;
+import com.mysql.cj.xdevapi.Result;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -36,15 +36,15 @@ public class PacienteDAO {
             ResultSet resultSets = statement.executeQuery();
 
             while (resultSets.next()) {
-                int idPaciente = resultSets.getInt(1);
+                int id_paciente = resultSets.getInt(1);
                 String nombre = resultSets.getNString(2);
                 String apellido = resultSets.getNString(3);
                 String telefono = resultSets.getNString(4);
-                String correoElectronico = resultSets.getNString(5);
-                LocalDate fechaNacimiento = resultSets.getObject(6, LocalDate.class);
+                String correo_electronico = resultSets.getNString(5);
+                LocalDate fecha_nacimiento = resultSets.getObject(6, LocalDate.class);
 
                 // Usamos el constructor que creamos antes
-                Paciente p = new Paciente(idPaciente, nombre, apellido, telefono, correoElectronico, fechaNacimiento);
+                Paciente p = new Paciente(id_paciente, nombre, apellido, telefono, correo_electronico, fecha_nacimiento);
                 pacientes.add(p);
 
             }
@@ -55,24 +55,78 @@ public class PacienteDAO {
     }
 
     //METODO PARA AÑADIR UN NUEVO PACIENTE
-    public static int insertPacientes(Paciente pacientes){
+    public static boolean createPaciente(Paciente p){
 
-        int response = -1;
+        boolean result = false;
 
-        String sqlStatement = "INSERT INTO pacientes (idPaciente, nombre, apellido, telefono, correoElectronico, fechaNacimiento) + " VALUES (?, ?, ?, ?, ?)";
+        String sqlInsertPacientes = "INSERT INTO paciente (nombre, apellido, telefono, correoElectronico, fechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
 
         try(Connection connection = SQLDataBaseManager.getConnection();
-        PreparedStatement sqlStatement = connection.prepareStatement(sqlStatement)){
+        PreparedStatement statement = connection.prepareStatement(sqlInsertPacientes)){
 
-            statement.setInt(1, pacientes.getIdPaciente());
-            statement.setNString(2, pacientes.getNombre());
-            statement.setNString(3, pacientes.getApellido());
-            statement.setNString(4, pacientes.getTelefono());
-            statement.setNString(5, pacientes.getCorreoElectronico());
-            statement.setObject(6, pacientes.getFechaNacimiento());
+            statement.setNString(2, p.getNombre());
+            statement.setNString(3, p.getApellido());
+            statement.setNString(4, p.getTelefono());
+            statement.setNString(5, p.getCorreoElectronico());
+            if(p.getFechaNacimiento()!=null){
+                statement.setDate(5, java.sql.Date.valueOf(p.getFechaNacimiento()));
+            }else {
+                statement.setNull(5, java.sql.Types.DATE);
+            }
 
-            response = statement.executeUpdate();
-        }catch(SQLException e)
+            statement.execute();
+            result = true;
+
+        }catch(SQLException e){
+            System.err.println("Error en createPaciente " + e.getMessage());
+        }
+        return result;
+    }
+
+    //METODO PARA ELIMINAR UN PACIENTE POR SU ID
+    public static boolean deletePaciente(int id_paciente){
+        boolean result = false;
+        String sqlDeletePacientes = "DELETE FROM paciente WHERE id_paciente = ?";
+
+        try(Connection connection = SQLDataBaseManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sqlDeletePacientes)) {
+
+            statement.setInt(1, id_paciente);
+            statement.execute();
+            result = true;
+
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar paciente " + e.getMessage());
+        }
+        return result;
+    }
+
+    //METODO PARA MOSTRAR TODOS LOS PACIENTES
+    public static List<Paciente> getAllpacientes(){
+        List<Paciente> pacientes = new LinkedList<>();
+
+        // Consulta SQL para traer todas las filas de la tabla 'paciente'
+        String sqlpacientes = "SELECT * FROM paciente";
+
+        try(Connection connection = SQLDataBaseManager.getConnection();
+            Statement stament = connection.createStatement();
+            ResultSet resultSets = stament.executeQuery(sqlpacientes)) {
+
+            while (resultSets.next()) {
+                int id_paciente = resultSets.getInt(1);
+                String nombre = resultSets.getNString(2);
+                String apellido = resultSets.getNString(3);
+                String telefono = resultSets.getNString(4);
+                String correo_electronico = resultSets.getNString(5);
+                LocalDate fecha_nacimiento = resultSets.getObject(6, LocalDate.class);
+
+                Paciente p = new Paciente(id_paciente, nombre, apellido, telefono, correo_electronico, fecha_nacimiento);
+                pacientes.add(p);
+            }
+        }catch (SQLException e) {
+            System.err.println("Error al listar pacientes " + e.getMessage());
+        }
+        return pacientes;
     }
 
 

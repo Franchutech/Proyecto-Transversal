@@ -20,6 +20,9 @@ public class Paciente {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+        public Paciente(){
+        }
+
     public int getIdPaciente() {
         return idPaciente;
     }

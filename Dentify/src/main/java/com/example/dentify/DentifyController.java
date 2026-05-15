@@ -3,93 +3,131 @@ package com.example.dentify;
 import Model.Doctor;
 import Model.Paciente;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-
+import javafx.scene.control.*;
 import java.util.List;
 
 public class DentifyController {
-    @FXML
-    private Label welcomeText;
 
-    @FXML
-    private ChoiceBox<String> choiceBoxEstados;
+    // ------ Elementos de Citas ------
+    @FXML private ChoiceBox<String> choiceBoxEstados;
+    @FXML private ChoiceBox<Paciente> choicePaciente;
+    @FXML private ChoiceBox<Doctor> choiceDoctor;
+    @FXML private ComboBox<String> cboHora;
 
-    @FXML
-    private ChoiceBox<Paciente> choicePaciente;
+    // ------ Elementos de Pacientes (Formulario) ------
+    @FXML private Label lblTituloFormulario;
+    @FXML private TextField TFNombre;
+    @FXML private TextField TFApellido;
+    @FXML private TextField TFTelefono;
+    @FXML private TextField TFCorreo;
+    @FXML private DatePicker TFNacimiento;
+    @FXML private Button btnGuardar;
 
-    @FXML
-    private ChoiceBox<Doctor> choiceDoctor;
+    // ------ Tabla de Pacientes ------
+    @FXML private TableView<Paciente> tablaPacientes;
+    @FXML private TableColumn<Paciente, Void> colAcciones;
 
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
-
-    @FXML
-    private ComboBox<String> cboHora;
+    // Objeto auxiliar para saber si estamos editando
+    private Paciente pacienteAEditar = null;
 
     @FXML
     public void initialize() {
-        // Lista simple de horas
+        // Configuracion de combos y selectores
+        configurarSelectores();
+
+        // Configuracion de la columna de acciones (Botón Editar)
+        configurarColumnaAcciones();
+
+        // cargarPacientes();
+    }
+
+    private void configurarSelectores() {
+        // Horas
         cboHora.getItems().addAll(
                 "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
                 "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
                 "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
                 "18:00", "18:30"
         );
-        // Estados de la cita
+        // Estados
         choiceBoxEstados.getItems().addAll("PENDIENTE", "ACTIVO", "CANCELADO");
-        choiceBoxEstados.setValue("PENDIENTE"); // Estado por defecto
-
-//        cargarPacientes();
-//        cargarDoctores();
+        choiceBoxEstados.setValue("PENDIENTE");
     }
 
-    //--------------------------------------------------------------------------------
+    private void configurarColumnaAcciones() {
+        colAcciones.setCellFactory(param -> new TableCell<>() {
+            private final Button btnEditar = new Button("Editar");
 
+            {
+                btnEditar.getStyleClass().add("primary-button");
+                btnEditar.setOnAction(event -> {
+                    Paciente seleccionado = getTableView().getItems().get(getIndex());
+                    prepararEdicion(seleccionado);
+                });
+            }
 
-    //ESTOS METODOS SON PARA CARGAR LOS PACIENTES Y DOCTORES EN EL CHOICEBOX
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnEditar);
+                }
+            }
+        });
+    }
 
-//    private void cargarPacientes() {
-//        // Si tienes un DAO
-//        PacienteDAO dao = new PacienteDAO();
-//        List<Paciente> pacientes = dao.getAllPacientes();
-//
-//        choicePaciente.getItems().clear();
-//        choicePaciente.getItems().addAll(pacientes);
-//
-//        // Seleccionar el primero si hay
-//        if (!choicePaciente.getItems().isEmpty()) {
-//            choicePaciente.setValue(choicePaciente.getItems().get(0));
-//        }
-//    }
-//
-//    private void cargarDoctores() {
-//        // Si tienes un DAO
-//        DoctorDAO dao = new DoctorDAO();
-//        List<Doctor> doctores = dao.getAllDoctores();
-//
-//        choiceDoctor.getItems().clear();
-//        choiceDoctor.getItems().addAll(doctores);
-//
-//        // Seleccionar el primero si hay
-//        if (!choiceDoctor.getItems().isEmpty()) {
-//            choiceDoctor.setValue(choiceDoctor.getItems().get(0));
-//        }
-//    }
+    // ------ Logica de Pacientes ------
 
-    //--------------------------------------------------------------------------------
+    public void prepararEdicion(Paciente p) {
+        this.pacienteAEditar = p;
+        lblTituloFormulario.setText("Editar Paciente");
+        btnGuardar.setText("Actualizar datos");
 
-    //metodo que podria funcionar para guardar cita, no es definido
+        TFNombre.setText(p.getNombre());
+        TFApellido.setText(p.getApellido());
+        TFTelefono.setText(p.getTelefono());
+        TFCorreo.setText(p.getCorreoElectronico());
+        TFNacimiento.setValue(p.getFechaNacimiento());
 
-//    private void guardarCita() {
-//        String horaSeleccionada = cboHora.getValue();
-//        if (horaSeleccionada != null) {
-//            // Guardar la hora junto con los demás datos
-//            System.out.println("Hora: " + horaSeleccionada);
-//        }
-//    }
+    }
+
+    @FXML
+    private void manejarGuardarPaciente() {
+        if (pacienteAEditar != null) {
+            pacienteAEditar.setNombre(TFNombre.getText());
+            pacienteAEditar.setApellido(TFApellido.getText());
+            pacienteAEditar.setTelefono(TFTelefono.getText());
+            pacienteAEditar.setCorreoElectronico(TFCorreo.getText());
+            pacienteAEditar.setFechaNacimiento(TFNacimiento.getValue());
+
+            System.out.println("Paciente actualizado: " + pacienteAEditar.getNombre());
+        } else {
+            System.out.println("Creando nuevo paciente...");
+        }
+
+        limpiarFormulario();
+    }
+
+    private void limpiarFormulario() {
+        pacienteAEditar = null;
+        TFNombre.clear();
+        TFApellido.clear();
+        TFTelefono.clear();
+        TFCorreo.clear();
+        TFNacimiento.setValue(null);
+
+        lblTituloFormulario.setText("Agregar paciente");
+        btnGuardar.setText("Guardar");
+    }
+
+    // --- Pendiente de conectar con Backend (Descomentar cuando existan los DAOs) ---
+    /*
+    private void cargarPacientes() {
+        PacienteDAO dao = new PacienteDAO();
+        List<Paciente> lista = dao.getAllPacientes();
+        tablaPacientes.getItems().setAll(lista);
+    }
+    */
 }

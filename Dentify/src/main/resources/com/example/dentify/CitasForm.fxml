@@ -33,8 +33,7 @@
                 </Button>
                 <VBox alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="title-main" text="Agregar cita" />
-                    </children>
+                        <Label fx:id="lblTituloFormulario" styleClass="title-main" text="Agregar cita"/>                    </children>
                 </VBox>
             </children>
         </HBox>

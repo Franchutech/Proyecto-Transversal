@@ -31,8 +31,7 @@
                 </Button>
                 <VBox alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="title-main" text="Agregar paciente" />
-                    </children>
+                        <Label fx:id="lblTituloFormulario" styleClass="title-main" text="Agregar paciente" />                    </children>
                 </VBox>
             </children>
         </HBox>
@@ -66,7 +65,7 @@
       </GridPane>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="btnGuardar" contentDisplay="RIGHT" mnemonicParsing="false" styleClass="primary-button" stylesheets="@styles.css" text="Guardar" textAlignment="CENTER">
+            <Button fx:id="btnGuardar" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#manejarGuardarPaciente" styleClass="primary-button" stylesheets="@styles.css" text="Guardar" textAlignment="CENTER">
                <HBox.margin>
                   <Insets left="600.0" top="20.0" />
                </HBox.margin>

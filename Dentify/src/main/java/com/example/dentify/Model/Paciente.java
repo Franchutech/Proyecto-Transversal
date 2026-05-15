@@ -67,4 +67,10 @@ public class Paciente {
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " " + apellido + " - " + telefono;
+    }
+
 }

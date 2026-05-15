@@ -5,79 +5,76 @@ import java.time.LocalDateTime;
 
 public class Cita {
 
+    // ATRIBUTOS
     private int idCita;
     private LocalDate fecha;
     private LocalDateTime hora;
     private String motivo;
-
-    //fk
     private int idEstado;
-    private int idPaciente;
-    private int idDoctor;
 
-    public Cita(int idCita, LocalDate fecha, LocalDateTime hora, String motivo, int idEstado, int idPaciente, int idDoctor) {
+    // ATRIBUTOS DE COMPOSICIÓN
+    private Paciente paciente;
+    private Doctor doctor;
+
+    // CAMPOS INTEGRADOS DE DETALLE CITA
+    private int idTratamiento;
+    private String observaciones;
+
+    // CONSTRUCTOR
+    public Cita(int idCita, LocalDate fecha, LocalDateTime hora, String motivo, int idEstado, Paciente paciente, Doctor doctor, int idTratamiento, String observaciones) {
         this.idCita = idCita;
         this.fecha = fecha;
         this.hora = hora;
         this.motivo = motivo;
         this.idEstado = idEstado;
-        this.idPaciente = idPaciente;
-        this.idDoctor = idDoctor;
+        this.paciente = paciente;
+        this.doctor = doctor;
+        this.idTratamiento = idTratamiento;
+        this.observaciones = observaciones;
     }
 
-    public int getIdCita() {
-        return idCita;
-    }
+    // GETTERS Y SETTERS
+    public int getIdCita() { return idCita; }
+    public void setIdCita(int idCita) { this.idCita = idCita; }
 
-    public void setIdCita(int idCita) {
-        this.idCita = idCita;
-    }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
-    public LocalDate getFecha() {
-        return fecha;
-    }
+    public LocalDateTime getHora() { return hora; }
+    public void setHora(LocalDateTime hora) { this.hora = hora; }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
+    public String getMotivo() { return motivo; }
+    public void setMotivo(String motivo) { this.motivo = motivo; }
 
-    public LocalDateTime getHora() {
-        return hora;
-    }
+    public int getIdEstado() { return idEstado; }
+    public void setIdEstado(int idEstado) { this.idEstado = idEstado; }
 
-    public void setHora(LocalDateTime hora) {
-        this.hora = hora;
-    }
+    // GETTERS Y SETTERS DE OBJETOS COMPLETOS
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
-    public String getMotivo() {
-        return motivo;
-    }
+    public Doctor getDoctor() { return doctor; }
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
-    public int getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(int idEstado) {
-        this.idEstado = idEstado;
-    }
-
+    // MÉTODOS PUENTE PARA EVITAR ERRORES DE ID
+    // Estos devuelven el ID entrando en el objeto, así no rompes el código antiguo
     public int getIdPaciente() {
-        return idPaciente;
-    }
-
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+        return (paciente != null) ? paciente.getIdPaciente() : 0;
     }
 
     public int getIdDoctor() {
-        return idDoctor;
+        return (doctor != null) ? doctor.getIdDoctor() : 0;
     }
 
-    public void setIdDoctor(int idDoctor) {
-        this.idDoctor = idDoctor;
+    public int getIdTratamiento() { return idTratamiento; }
+    public void setIdTratamiento(int idTratamiento) { this.idTratamiento = idTratamiento; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
+    // TOSTRING
+    @Override
+    public String toString() {
+        return "Cita #" + idCita + " | Paciente: " + (paciente != null ? paciente.getNombre() : "N/A");
     }
 }

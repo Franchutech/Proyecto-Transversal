@@ -68,4 +68,10 @@ public class Doctor {
     public void setEspecialidad(Enum especialidad) {
         this.especialidad = especialidad;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " - " + especialidad;
+    }
+
 }

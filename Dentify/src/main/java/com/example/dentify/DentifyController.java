@@ -148,6 +148,10 @@ public class DentifyController {
         btnGuardarCita.setText("Guardar");
 
         DatePickerFecha.setValue(cita.getFecha());
-        
+        cboHora.setValue(DatePickerFecha.getValue().toString());
+        choicePaciente.setValue(cita.getPaciente());
+        choiceDoctor.setValue(cita.getDoctor());
+        txtMotivo.setText(cita.getMotivo());
+        choiceBoxEstados.setValue();
     }
 }

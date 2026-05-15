@@ -10,9 +10,9 @@ public class Doctor {
     private String direccion;
     private String numColegiado;
 
-    private Enum especialidad;
+    private Especialidad especialidad;
 
-    public Doctor(int idDoctor, String nombre, LocalDate fechaNacimento, String direccion, String numColegiado, Enum especialidad) {
+    public Doctor(int idDoctor, String nombre, LocalDate fechaNacimento, String direccion, String numColegiado, Especialidad especialidad) {
         this.idDoctor = idDoctor;
         this.nombre = nombre;
         this.fechaNacimento = fechaNacimento;
@@ -61,11 +61,11 @@ public class Doctor {
         this.numColegiado = numColegiado;
     }
 
-    public Enum getEspecialidad() {
+    public Especialidad getEspecialidad() {
         return especialidad;
     }
 
-    public void setEspecialidad(Enum especialidad) {
+    public void setEspecialidad(Especialidad especialidad) {
         this.especialidad = especialidad;
     }
 

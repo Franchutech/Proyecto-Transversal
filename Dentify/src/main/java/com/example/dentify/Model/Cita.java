@@ -10,7 +10,7 @@ public class Cita {
     private LocalDate fecha;
     private LocalDateTime hora;
     private String motivo;
-    private int idEstado;
+    private Estado Estado;
 
     // ATRIBUTOS DE COMPOSICIÓN
     private Paciente paciente;
@@ -21,12 +21,12 @@ public class Cita {
     private String observaciones;
 
     // CONSTRUCTOR
-    public Cita(int idCita, LocalDate fecha, LocalDateTime hora, String motivo, int idEstado, Paciente paciente, Doctor doctor, int idTratamiento, String observaciones) {
+    public Cita(int idCita, LocalDate fecha, LocalDateTime hora, String motivo, Estado Estado, Paciente paciente, Doctor doctor, int idTratamiento, String observaciones) {
         this.idCita = idCita;
         this.fecha = fecha;
         this.hora = hora;
         this.motivo = motivo;
-        this.idEstado = idEstado;
+        this.Estado = Estado;
         this.paciente = paciente;
         this.doctor = doctor;
         this.idTratamiento = idTratamiento;
@@ -46,8 +46,8 @@ public class Cita {
     public String getMotivo() { return motivo; }
     public void setMotivo(String motivo) { this.motivo = motivo; }
 
-    public int getIdEstado() { return idEstado; }
-    public void setIdEstado(int idEstado) { this.idEstado = idEstado; }
+    public Estado getEstado() { return Estado; }
+    public void setEstado(Estado Estado) { this.Estado = Estado; }
 
     // GETTERS Y SETTERS DE OBJETOS COMPLETOS
     public Paciente getPaciente() { return paciente; }

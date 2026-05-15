@@ -4,18 +4,21 @@ import java.time.LocalDate;
 
 public class HistorialClinico {
 
+    // ATRIBUTOS
     private int idHistorialClinico;
-    private int idPaciente;
+    private Paciente paciente; // Cambio de int a objeto Paciente
     private LocalDate fechaCreacion;
     private String grupoSanguineo;
 
-    public HistorialClinico(int idHistorialClinico, int idPaciente, LocalDate fechaCreacion, String grupoSanguineo) {
+    // CONSTRUCTOR
+    public HistorialClinico(int idHistorialClinico, Paciente paciente, LocalDate fechaCreacion, String grupoSanguineo) {
         this.idHistorialClinico = idHistorialClinico;
-        this.idPaciente = idPaciente;
+        this.paciente = paciente;
         this.fechaCreacion = fechaCreacion;
         this.grupoSanguineo = grupoSanguineo;
     }
 
+    // GETTERS Y SETTERS
     public int getIdHistorialClinico() {
         return idHistorialClinico;
     }
@@ -24,12 +27,17 @@ public class HistorialClinico {
         this.idHistorialClinico = idHistorialClinico;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
+    public Paciente getPaciente() {
+        return paciente;
     }
 
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    // MÉTODO PUENTE (PARA EVITAR ERRORES CON EL ID)
+    public int getIdPaciente() {
+        return (paciente != null) ? paciente.getIdPaciente() : 0;
     }
 
     public LocalDate getFechaCreacion() {
@@ -46,5 +54,12 @@ public class HistorialClinico {
 
     public void setGrupoSanguineo(String grupoSanguineo) {
         this.grupoSanguineo = grupoSanguineo;
+    }
+
+    // TOSTRING
+    @Override
+    public String toString() {
+        return "Historial #" + idHistorialClinico + " - Paciente: " +
+               (paciente != null ? paciente.getNombre() + " " + paciente.getApellido() : "Sin asignar");
     }
 }

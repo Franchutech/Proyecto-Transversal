@@ -57,7 +57,8 @@ public class Cita {
     public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
     // MÉTODOS PUENTE PARA EVITAR ERRORES DE ID
-    // Estos devuelven el ID entrando en el objeto, así no rompes el código antiguo
+
+
     public int getIdPaciente() {
         return (paciente != null) ? paciente.getIdPaciente() : 0;
     }
@@ -72,9 +73,34 @@ public class Cita {
     public String getObservaciones() { return observaciones; }
     public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
 
+    //METODOS DE VALIDACION
+
+    // Mi método para validar si los datos de la cita tienen sentido con la nueva estructura
+public boolean esValida() {
+    // 1. Verifico que las fechas no sean nulas
+    if (this.fecha == null || this.hora == null) return false;
+
+    // 2. No permito citas en el pasado
+    if (this.fecha.isBefore(LocalDate.now())) return false;
+
+    // 3. Valido que el motivo tenga contenido real
+    if (this.motivo == null || this.motivo.trim().isEmpty()) return false;
+
+    // 4. NUEVA VALIDACIÓN: Los objetos Paciente y Doctor deben existir
+    if (this.paciente == null || this.doctor == null) return false;
+
+    // 5. Verifico que sus IDs internos sean correctos (usando tus métodos puente)
+    return this.getIdPaciente() > 0 && this.getIdDoctor() > 0;
+
+}//CIERRE METODO VALIDACION DATOS CITA
+
+
+
     // TOSTRING
     @Override
     public String toString() {
         return "Cita #" + idCita + " | Paciente: " + (paciente != null ? paciente.getNombre() : "N/A");
     }
+
+
 }

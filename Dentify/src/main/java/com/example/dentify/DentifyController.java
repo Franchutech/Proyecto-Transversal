@@ -2,15 +2,22 @@ package com.example.dentify;
 
 import com.example.dentify.Model.Cita;
 import com.example.dentify.Model.Doctor;
+import com.example.dentify.Model.Estado;
 import com.example.dentify.Model.Paciente;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import java.util.List;
+import javafx.scene.layout.HBox;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 
 public class DentifyController {
 
     // ------ Elementos de Citas ------
-    @FXML private ChoiceBox<String> choiceBoxEstados;
+    @FXML private ChoiceBox<Estado> choiceBoxEstados;
     @FXML private ChoiceBox<Paciente> choicePaciente;
     @FXML private ChoiceBox<Doctor> choiceDoctor;
     @FXML private ComboBox<String> cboHora;
@@ -18,6 +25,8 @@ public class DentifyController {
     @FXML private Button btnGuardarCita;
     @FXML private DatePicker DatePickerFecha;
     @FXML private TextArea txtMotivo;
+    @FXML private TableView<Cita> tablaCitas;
+    @FXML private TableColumn<Cita, Void> colAccionesCitas;
 
 
     // ------ Elementos de Pacientes (Formulario) ------
@@ -33,19 +42,16 @@ public class DentifyController {
     @FXML private TableView<Paciente> tablaPacientes;
     @FXML private TableColumn<Paciente, Void> colAcciones;
 
-    // Objeto auxiliar para saber si estamos editando
+    // Objetos auxiliares para saber si estamos editando
     private Paciente pacienteAEditar = null;
-    private Cita  citaAEditar = null;
+    private Cita citaAEditar = null;
+
 
     @FXML
     public void initialize() {
-        // Configuracion de combos y selectores
         configurarSelectores();
-
-        // Configuracion de la columna de acciones (Botón Editar)
         configurarColumnaAcciones();
-
-        // cargarPacientes();
+        configurarColumnaAccionesCitas();
     }
 
     private void configurarSelectores() {
@@ -56,15 +62,14 @@ public class DentifyController {
                 "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
                 "18:00", "18:30"
         );
-        // Estados
-        choiceBoxEstados.getItems().addAll("PENDIENTE", "ACTIVO", "CANCELADO");
-        choiceBoxEstados.setValue("PENDIENTE");
+
+        choiceBoxEstados.getItems().setAll(Estado.values());
+        choiceBoxEstados.setValue(Estado.PENDIENTE);
     }
 
     private void configurarColumnaAcciones() {
         colAcciones.setCellFactory(param -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
-
             {
                 btnEditar.getStyleClass().add("primary-button");
                 btnEditar.setOnAction(event -> {
@@ -76,11 +81,7 @@ public class DentifyController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(btnEditar);
-                }
+                setGraphic(empty ? null : btnEditar);
             }
         });
     }
@@ -97,7 +98,6 @@ public class DentifyController {
         TFTelefono.setText(p.getTelefono());
         TFCorreo.setText(p.getCorreoElectronico());
         TFNacimiento.setValue(p.getFechaNacimiento());
-
     }
 
     @FXML
@@ -108,12 +108,7 @@ public class DentifyController {
             pacienteAEditar.setTelefono(TFTelefono.getText());
             pacienteAEditar.setCorreoElectronico(TFCorreo.getText());
             pacienteAEditar.setFechaNacimiento(TFNacimiento.getValue());
-
-            System.out.println("Paciente actualizado: " + pacienteAEditar.getNombre());
-        } else {
-            System.out.println("Creando nuevo paciente...");
         }
-
         limpiarFormulario();
     }
 
@@ -124,34 +119,112 @@ public class DentifyController {
         TFTelefono.clear();
         TFCorreo.clear();
         TFNacimiento.setValue(null);
-
         lblTituloFormulario.setText("Agregar paciente");
         btnGuardar.setText("Guardar");
     }
 
-    // --- Pendiente de conectar con Backend (Descomentar cuando existan los DAOs) ---
-    /*
-    private void cargarPacientes() {
-        PacienteDAO dao = new PacienteDAO();
-        List<Paciente> lista = dao.getAllPacientes();
-        tablaPacientes.getItems().setAll(lista);
-    }
-    */
 
+    // ------ Gestión citas ------
 
-    // Gestión citas
-
-    public void prepararEdicionCita(Cita cita){
+    public void prepararEdicionCita(Cita cita) {
         this.citaAEditar = cita;
-
         lblTituloCita.setText("Editar cita #" + cita.getIdCita());
-        btnGuardarCita.setText("Guardar");
-
+        btnGuardarCita.setText("Actualizar Cita");
         DatePickerFecha.setValue(cita.getFecha());
-        cboHora.setValue(DatePickerFecha.getValue().toString());
+
+        if (cita.getHora() != null) {
+            String horaString = cita.getHora().toLocalTime().toString();
+            cboHora.setValue(horaString);
+        }
+
         choicePaciente.setValue(cita.getPaciente());
         choiceDoctor.setValue(cita.getDoctor());
         txtMotivo.setText(cita.getMotivo());
-        choiceBoxEstados.setValue();
+        choiceBoxEstados.setValue(cita.getEstado());
+    }
+
+    @FXML
+    private void manejarGuardarCita() {
+        if (citaAEditar != null) {
+
+            LocalDate fecha = DatePickerFecha.getValue();
+            String horaSeleccionada = cboHora.getValue();
+
+            if (fecha != null && horaSeleccionada != null) {
+                LocalTime tiempo = LocalTime.parse(horaSeleccionada);
+                LocalDateTime fechaHoraCompleta = LocalDateTime.of(fecha, tiempo);
+
+                citaAEditar.setFecha(fecha);
+                citaAEditar.setHora(fechaHoraCompleta);
+            }
+
+            citaAEditar.setPaciente(choicePaciente.getValue());
+            citaAEditar.setDoctor(choiceDoctor.getValue());
+            citaAEditar.setMotivo(txtMotivo.getText());
+            citaAEditar.setEstado(choiceBoxEstados.getValue());
+
+            System.out.println("Cita actualizada correctamente.");
+            tablaCitas.refresh();
+        }
+        limpiarFormularioCita();
+    }
+
+    private void limpiarFormularioCita() {
+        citaAEditar = null;
+        DatePickerFecha.setValue(null);
+        cboHora.setValue(null);
+        choicePaciente.setValue(null);
+        choiceDoctor.setValue(null);
+        txtMotivo.clear();
+        choiceBoxEstados.setValue(Estado.PENDIENTE);
+
+        lblTituloCita.setText("Agregar cita");
+        btnGuardarCita.setText("Guardar");
+    }
+
+    private void configurarColumnaAccionesCitas() {
+        colAccionesCitas.setCellFactory(param -> new TableCell<>() {
+            private final Button btnEditar = new Button("✏️");
+            private final Button btnEliminar = new Button("🗑️");
+            private final HBox contenedor = new HBox(10, btnEditar, btnEliminar);
+
+            {
+                btnEditar.getStyleClass().add("primary-button");
+                btnEliminar.getStyleClass().add("danger-button");
+
+                btnEditar.setOnAction(event -> {
+                    Cita seleccionado = getTableView().getItems().get(getIndex());
+                    prepararEdicionCita(seleccionado);
+                });
+
+                btnEliminar.setOnAction(event -> {
+                    Cita seleccionado = getTableView().getItems().get(getIndex());
+                    confirmarEliminarCita(seleccionado);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(contenedor);
+                }
+            }
+        });
+    }
+
+    private void confirmarEliminarCita(Cita cita) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar eliminación");
+        alert.setHeaderText("¿Estás seguro de eliminar la cita #" + cita.getIdCita() + "?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            // Aquí se tiene que llamar a CitaDAO para eliminar
+            tablaCitas.getItems().remove(cita);
+            System.out.println("Cita eliminada: " + cita.getIdCita());
+        }
     }
 }

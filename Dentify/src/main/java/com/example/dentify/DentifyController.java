@@ -1,7 +1,7 @@
 package com.example.dentify;
 
-import Model.Doctor;
-import Model.Paciente;
+import com.example.dentify.Model.Doctor;
+import com.example.dentify.Model.Paciente;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.util.List;

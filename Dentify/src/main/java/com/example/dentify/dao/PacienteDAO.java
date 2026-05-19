@@ -2,9 +2,6 @@ package com.example.dentify.dao;
 
 import com.example.dentify.Configuration.SQLDataBaseManager;
 import com.example.dentify.Model.Paciente;
-import com.mysql.cj.xdevapi.PreparableStatement;
-import com.mysql.cj.xdevapi.Result;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,10 +20,10 @@ public class PacienteDAO {
     public static List <Paciente> getpacientesByNameSurnamePhone(String texto){
         List <Paciente> pacientes = new ArrayList<>();
 
-        String sqlpacientes = "SELECT * FROM pacientes WHERE nombre LIKE ? OR apellido LIKE ? OR telefono LIKE ? ";
+        String sqlpaciente = "SELECT * FROM paciente WHERE nombre LIKE ? OR apellido LIKE ? OR telefono LIKE ? ";
 
         try(Connection connection = SQLDataBaseManager.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sqlpacientes)) {
+        PreparedStatement statement = connection.prepareStatement(sqlpaciente)) {
 
             String filtro = "%" + texto + "%";
             statement.setString(1, filtro);
@@ -59,17 +56,17 @@ public class PacienteDAO {
 
         boolean result = false;
 
-        String sqlInsertPacientes = "INSERT INTO paciente (nombre, apellido, telefono, correoElectronico, fechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlInsertPacientes = "INSERT INTO paciente (nombre, apellido, telefono, correo_electronico, fecha_nacimiento) VALUES (?, ?, ?, ?, ?)";
 
         try(Connection connection = SQLDataBaseManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sqlInsertPacientes)){
 
-            statement.setNString(2, p.getNombre());
-            statement.setNString(3, p.getApellido());
-            statement.setNString(4, p.getTelefono());
-            statement.setNString(5, p.getCorreoElectronico());
-            if(p.getFechaNacimiento()!=null){
-                statement.setDate(5, java.sql.Date.valueOf(p.getFechaNacimiento()));
+            statement.setNString(1, p.getNombre());
+            statement.setNString(2, p.getApellido());
+            statement.setNString(3, p.getTelefono());
+            statement.setNString(4, p.getCorreo_electronico());
+            if(p.getFecha_nacimiento()!=null){
+                statement.setDate(5, java.sql.Date.valueOf(p.getFecha_nacimiento()));
             }else {
                 statement.setNull(5, java.sql.Types.DATE);
             }

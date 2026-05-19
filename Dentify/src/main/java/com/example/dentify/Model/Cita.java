@@ -72,12 +72,24 @@ public class Cita {
 
     // MÉTODO PARA VALIDAR
     public boolean esValida() {
+        // 1. Verificaciones básicas de nulos
         if (this.fecha == null || this.hora == null) return false;
-        if (this.fecha.isBefore(LocalDate.now())) return false;
         if (this.motivo == null || this.motivo.trim().isEmpty()) return false;
         if (this.paciente == null || this.doctor == null) return false;
+        if (this.getIdPaciente() <= 0 || this.getIdDoctor() <= 0) return false;
 
-        return this.getIdPaciente() > 0 && this.getIdDoctor() > 0;
+        // 2. Control del tiempo: No citas en el pasado real (Fecha y Hora juntas)
+        if (this.hora.isBefore(LocalDateTime.now())) return false;
+
+        // 3. Control de Horario Comercial (Ejemplo: 9:00 a 20:00)
+        int horaInt = this.hora.getHour();
+        if (horaInt < 9 || horaInt >= 20) return false;
+
+        // 4. Control de fines de semana (Evitar Sábados y Domingos si la clínica cierra)
+        java.time.DayOfWeek dia = this.fecha.getDayOfWeek();
+        if (dia == java.time.DayOfWeek.SATURDAY || dia == java.time.DayOfWeek.SUNDAY) return false;
+
+        return true;
     }
 
     // TOSTRING

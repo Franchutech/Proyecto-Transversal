@@ -10,32 +10,49 @@ import java.util.List;
 public class DentifyController {
 
     // ------ Elementos de Citas ------
-    @FXML private ChoiceBox<String> choiceBoxEstados;
-    @FXML private ChoiceBox<Paciente> choicePaciente;
-    @FXML private ChoiceBox<Doctor> choiceDoctor;
-    @FXML private ComboBox<String> cboHora;
-    @FXML private Label lblTituloCita;
-    @FXML private Button btnGuardarCita;
-    @FXML private DatePicker DatePickerFecha;
-    @FXML private TextArea txtMotivo;
+    @FXML
+    private ChoiceBox<String> choiceBoxEstados;
+    @FXML
+    private ChoiceBox<Paciente> choicePaciente;
+    @FXML
+    private ChoiceBox<Doctor> choiceDoctor;
+    @FXML
+    private ComboBox<String> cboHora;
+    @FXML
+    private Label lblTituloCita;
+    @FXML
+    private Button btnGuardarCita;
+    @FXML
+    private DatePicker DatePickerFecha;
+    @FXML
+    private TextArea txtMotivo;
 
 
     // ------ Elementos de Pacientes (Formulario) ------
-    @FXML private Label lblTituloFormulario;
-    @FXML private TextField TFNombre;
-    @FXML private TextField TFApellido;
-    @FXML private TextField TFTelefono;
-    @FXML private TextField TFCorreo;
-    @FXML private DatePicker TFNacimiento;
-    @FXML private Button btnGuardar;
+    @FXML
+    private Label lblTituloFormulario;
+    @FXML
+    private TextField TFNombre;
+    @FXML
+    private TextField TFApellido;
+    @FXML
+    private TextField TFTelefono;
+    @FXML
+    private TextField TFCorreo;
+    @FXML
+    private DatePicker TFNacimiento;
+    @FXML
+    private Button btnGuardar;
 
     // ------ Tabla de Pacientes ------
-    @FXML private TableView<Paciente> tablaPacientes;
-    @FXML private TableColumn<Paciente, Void> colAcciones;
+    @FXML
+    private TableView<Paciente> tablaPacientes;
+    @FXML
+    private TableColumn<Paciente, Void> colAcciones;
 
     // Objeto auxiliar para saber si estamos editando
     private Paciente pacienteAEditar = null;
-    private Cita  citaAEditar = null;
+    private Cita citaAEditar = null;
 
     @FXML
     public void initialize() {
@@ -140,18 +157,31 @@ public class DentifyController {
 
 
     // Gestión citas
+    //GESTION CITAS EN PROCESO CON FRANCELLA
 
-    public void prepararEdicionCita(Cita cita){
+    public void prepararEdicionCita(Cita cita) {
         this.citaAEditar = cita;
 
         lblTituloCita.setText("Editar cita #" + cita.getIdCita());
-        btnGuardarCita.setText("Guardar");
+        btnGuardarCita.setText("Actualizar datos"); // Más claro para el usuario
 
         DatePickerFecha.setValue(cita.getFecha());
-        cboHora.setValue(DatePickerFecha.getValue().toString());
+
+        // CORRECCIÓN: Sacamos la hora formateada en "HH:mm" para el ComboBox
+        if (cita.getHora() != null) {
+            String horaFormateada = String.format("%02d:%02d", cita.getHora().getHour(), cita.getHora().getMinute());
+            cboHora.setValue(horaFormateada);
+        }
+
         choicePaciente.setValue(cita.getPaciente());
         choiceDoctor.setValue(cita.getDoctor());
         txtMotivo.setText(cita.getMotivo());
-        choiceBoxEstados.setValue();
-    }
-}
+
+        // CORRECCIÓN: Pasamos el Enum a String para el ChoiceBox
+        if (cita.getEstado() != null) {
+            choiceBoxEstados.setValue(cita.getEstado().name());
+        }
+    } //CIERRE PREPARAR EDICION CITA
+
+
+}//CIERRE DENTIFY CONTROLLER

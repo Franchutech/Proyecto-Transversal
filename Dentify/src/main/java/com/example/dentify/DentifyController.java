@@ -2,6 +2,7 @@ package com.example.dentify;
 
 import com.example.dentify.Model.*;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -13,6 +14,17 @@ import java.time.LocalTime;
 
 
 public class DentifyController {
+
+    // ------ Elementos de tratamientos -----
+    @FXML private TableView<Tratamiento> tablaTratamientos;
+    @FXML private TableColumn<Tratamiento, Integer> colIdTratamiento;
+    @FXML private TableColumn<Tratamiento, String> colNombreTratamiento;
+    @FXML private TableColumn<Tratamiento, String> colDescripcion;
+    @FXML private TableColumn<Tratamiento, Void> colAccionesTratamientos;
+    @FXML private Label lblTituloFormularioTratamiento;
+    @FXML private TextField TFNombreTratamiento;
+    @FXML private TextArea TFDescripcion;
+    @FXML private Button btnGuardarTratamiento;
 
     // ------ Elementos de Citas ------(EN PROCESO CON FRANCELLA, CONSULTARME ANTES DE MODIFICAR)
     @FXML private ChoiceBox<Estado> choiceBoxEstados;
@@ -54,6 +66,7 @@ public class DentifyController {
     @FXML private TableColumn<Doctor, Especialidad> colEspecialidad;
 
     // Objetos auxiliares para saber si estamos editando
+    private Tratamiento tratamientoAEditar = null;
     private Paciente pacienteAEditar = null;
     private Cita citaAEditar = null;
 
@@ -422,5 +435,33 @@ private void cargarDatosDePruebaCitas() {
 
     tablaCitas.getItems().addAll(c1, c2);
 }
+
+
+
+// -------- Gestión Tratamientos --------
+    @FXML
+    public void manejarNuevoTratamiento(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void manejarGuardarTratamiento(ActionEvent actionEvent) {
+    }
+
+    private void prepararEdicionTratamiento(){
+
+    }
+
+    private void configurarTablaTratamientos(){
+
+    }
+
+    private void configurarColumnaAccionesTratamientos(){
+
+    }
+
+    private void confirmarEliminarTratamiento() {
+
+    }
+
 
 }//CIERRE DENTIFY CONTROLLER

@@ -31,7 +31,8 @@
                 </Button>
                 <VBox alignment="CENTER_LEFT">
                     <children>
-                        <Label fx:id="lblTituloFormulario" styleClass="title-main" text="Agregar paciente" />                    </children>
+                        <Label fx:id="lblTituloFormulario" styleClass="title-main" text="Agregar paciente" />
+                    </children>
                 </VBox>
             </children>
         </HBox>

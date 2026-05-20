@@ -9,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Insets?>
+
 <VBox prefHeight="650.0" prefWidth="850.0" styleClass="grid-pane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dentify.DentifyController">
     <children>
         <HBox alignment="CENTER_LEFT" prefHeight="140.0" spacing="25.0" style="-fx-background-color: #0A3459;">
@@ -42,8 +43,8 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <TextField fx:id="txtBuscar" promptText="Buscar paciente por nombre, apellido o teléfono..." styleClass="text-field-custom" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnNuevo" prefHeight="45.0" prefWidth="200.0" styleClass="success-button" text="+ Nuevo Paciente" />
+                        <TextField fx:id="txtBuscar" promptText="Buscar doctor por nombre, apellido o teléfono..." styleClass="text-field-custom" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnNuevo" onAction="#manejarNuevoDoctor" prefHeight="45.0" prefWidth="200.0" styleClass="success-button" text="+ Nuevo Doctor" />
                     </children>
                 </HBox>
 
@@ -55,6 +56,7 @@
                         <TableColumn fx:id="colDireccion" prefWidth="110.0" text="Dirección" />
                         <TableColumn fx:id="colNumColegiado" prefWidth="180.0" text="Num. Colegiado" />
                         <TableColumn fx:id="colEspecialidad" prefWidth="130.0" text="Especialidad" />
+                        <TableColumn fx:id="colAcciones" prefWidth="130.0" text="Acciones" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -63,3 +65,4 @@
             </children>
         </VBox>
     </children>
+</VBox>

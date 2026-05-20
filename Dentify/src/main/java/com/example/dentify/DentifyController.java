@@ -1,6 +1,8 @@
 package com.example.dentify;
 
 import com.example.dentify.Model.*;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -41,12 +43,18 @@ public class DentifyController {
     // ------- Elementos de Doctores ---------
     @FXML private TableView<Doctor> tablaDoctores;
     @FXML private TableColumn<Doctor, Integer> colIdDoctor;
-    @FXML private TableColumn<Paciente, String> colNombreDoctor;
+    @FXML private TableColumn<Doctor, String> colNombreDoctor;
     @FXML private TableColumn<Doctor, Especialidad> colEspecialidad;
+    @FXML private TextField TFNombreCompleto;
+    @FXML private TextField TFNumColegiado;
+    @FXML private TextField TFDireccion;
+    @FXML private DatePicker TFNacimientoDoctor;
+    @FXML private ChoiceBox<Especialidad> choiceBoxEspecialidad;
 
     // Objetos auxiliares para saber si estamos editando
     private Paciente pacienteAEditar = null;
     private Cita citaAEditar = null;
+    private Doctor doctorAEditar = null;
 
 
     @FXML
@@ -54,16 +62,33 @@ public class DentifyController {
         configurarSelectores();
         configurarColumnaAcciones();
         configurarColumnaAccionesCitas();
+        configurarColumnaEspecialidad();
+    }
+
+    //-------- Gestión Doctores -----------
+
+    //onAction del boton para guardar los datos del doctor
+    @FXML
+    public void manejarGuardarDoctor(ActionEvent actionEvent) {
+
+    }
+
+    //onAction del boton para agregar doctor, boton que se encuentra en la ventanda de gestion de doctores
+    public void manejarNuevoDoctor(ActionEvent actionEvent) {
+
+    }
+
+    //funcion para editar doctor
+    public void prepararEdicionDoctores(){
+
     }
 
     private void configurarColumnaEspecialidad() {
-        // Configurar cómo obtener el valor del enum desde el objeto Doctor
         colEspecialidad.setCellValueFactory(cellData -> {
             Especialidad esp = cellData.getValue().getEspecialidad();
             return new SimpleObjectProperty<>(esp);
         });
 
-        // Configurar cómo se muestra visualmente el enum
         colEspecialidad.setCellFactory(column -> new TableCell<Doctor, Especialidad>() {
             @Override
             protected void updateItem(Especialidad item, boolean empty) {
@@ -73,11 +98,9 @@ public class DentifyController {
                     setText(null);
                     setStyle("");
                 } else {
-                    // Convertir el enum a texto legible
                     String textoMostrar = formatearEspecialidad(item);
                     setText(textoMostrar);
 
-                    // Opcional: Aplicar colores según la especialidad
                     aplicarColorSegunEspecialidad(item);
                 }
             }
@@ -123,6 +146,13 @@ public class DentifyController {
         });
     }
 
+    //falta aregar botones de onAction para agregar pacientes y citas, no lo voy agregar para que no haya conflicto
+
+
+
+
+
+
     private void configurarSelectores() {
         // Horas
         cboHora.getItems().addAll(
@@ -135,6 +165,8 @@ public class DentifyController {
         choiceBoxEstados.getItems().setAll(Estado.values());
         choiceBoxEstados.setValue(Estado.PENDIENTE);
     }
+
+    // REVISAR SI SE PUEDE REUTILIZAR LA FUNCION DE ACCIONES CON DOCTORES
 
     private void configurarColumnaAcciones() {
         colAcciones.setCellFactory(param -> new TableCell<>() {
@@ -296,4 +328,7 @@ public class DentifyController {
             System.out.println("Cita eliminada: " + cita.getIdCita());
         }
     }
+
+
+
 }

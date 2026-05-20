@@ -1,68 +1,126 @@
 package com.example.dentify;
 
-import com.example.dentify.Model.Cita;
-import com.example.dentify.Model.Doctor;
-import com.example.dentify.Model.Paciente;
+import com.example.dentify.Model.*;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import java.util.List;
+import javafx.scene.layout.HBox;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 
 public class DentifyController {
 
     // ------ Elementos de Citas ------
-    @FXML
-    private ChoiceBox<String> choiceBoxEstados;
-    @FXML
-    private ChoiceBox<Paciente> choicePaciente;
-    @FXML
-    private ChoiceBox<Doctor> choiceDoctor;
-    @FXML
-    private ComboBox<String> cboHora;
-    @FXML
-    private Label lblTituloCita;
-    @FXML
-    private Button btnGuardarCita;
-    @FXML
-    private DatePicker DatePickerFecha;
-    @FXML
-    private TextArea txtMotivo;
+    @FXML private ChoiceBox<Estado> choiceBoxEstados;
+    @FXML private ChoiceBox<Paciente> choicePaciente;
+    @FXML private ChoiceBox<Doctor> choiceDoctor;
+    @FXML private ComboBox<String> cboHora;
+    @FXML private Label lblTituloCita;
+    @FXML private Button btnGuardarCita;
+    @FXML private DatePicker DatePickerFecha;
+    @FXML private TextArea txtMotivo;
+    @FXML private TableView<Cita> tablaCitas;
+    @FXML private TableColumn<Cita, Void> colAccionesCitas;
 
 
     // ------ Elementos de Pacientes (Formulario) ------
-    @FXML
-    private Label lblTituloFormulario;
-    @FXML
-    private TextField TFNombre;
-    @FXML
-    private TextField TFApellido;
-    @FXML
-    private TextField TFTelefono;
-    @FXML
-    private TextField TFCorreo;
-    @FXML
-    private DatePicker TFNacimiento;
-    @FXML
-    private Button btnGuardar;
+    @FXML private Label lblTituloFormulario;
+    @FXML private TextField TFNombre;
+    @FXML private TextField TFApellido;
+    @FXML private TextField TFTelefono;
+    @FXML private TextField TFCorreo;
+    @FXML private DatePicker TFNacimiento;
+    @FXML private Button btnGuardar;
+    @FXML private TableView<Paciente> tablaPacientes;
+    @FXML private TableColumn<Paciente, Void> colAcciones;
 
-    // ------ Tabla de Pacientes ------
-    @FXML
-    private TableView<Paciente> tablaPacientes;
-    @FXML
-    private TableColumn<Paciente, Void> colAcciones;
 
-    // Objeto auxiliar para saber si estamos editando
+    // ------- Elementos de Doctores ---------
+    @FXML private TableView<Doctor> tablaDoctores;
+    @FXML private TableColumn<Doctor, Integer> colIdDoctor;
+    @FXML private TableColumn<Paciente, String> colNombreDoctor;
+    @FXML private TableColumn<Doctor, Especialidad> colEspecialidad;
+
+    // Objetos auxiliares para saber si estamos editando
     private Paciente pacienteAEditar = null;
     private Cita citaAEditar = null;
 
+
     @FXML
     public void initialize() {
-        // Configuracion de combos y selectores
         configurarSelectores();
-
-        // Configuracion de la columna de acciones (Botón Editar)
         configurarColumnaAcciones();
+        configurarColumnaAccionesCitas();
+    }
 
-        // cargarPacientes();
+    private void configurarColumnaEspecialidad() {
+        // Configurar cómo obtener el valor del enum desde el objeto Doctor
+        colEspecialidad.setCellValueFactory(cellData -> {
+            Especialidad esp = cellData.getValue().getEspecialidad();
+            return new SimpleObjectProperty<>(esp);
+        });
+
+        // Configurar cómo se muestra visualmente el enum
+        colEspecialidad.setCellFactory(column -> new TableCell<Doctor, Especialidad>() {
+            @Override
+            protected void updateItem(Especialidad item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    // Convertir el enum a texto legible
+                    String textoMostrar = formatearEspecialidad(item);
+                    setText(textoMostrar);
+
+                    // Opcional: Aplicar colores según la especialidad
+                    aplicarColorSegunEspecialidad(item);
+                }
+            }
+
+            private String formatearEspecialidad(Especialidad esp) {
+                switch (esp) {
+                    case ENDODONCITAS:
+                        return "Endodoncia";
+                    case ORTODONCISTA:
+                        return "Ortodoncia";
+                    case CIRUGIA:
+                        return "Cirugía Maxilofacial";
+                    case GENERAL:
+                        return "Odontología General";
+                    case PERIODONCISTA:
+                        return "Periodoncia";
+                    default:
+                        return esp.name();
+                }
+            }
+
+            private void aplicarColorSegunEspecialidad(Especialidad esp) {
+                switch (esp) {
+                    case ENDODONCITAS:
+                        setStyle("-fx-text-fill: #9C27B0; -fx-font-weight: bold;");
+                        break;
+                    case ORTODONCISTA:
+                        setStyle("-fx-text-fill: #2196F3; -fx-font-weight: bold;");
+                        break;
+                    case CIRUGIA:
+                        setStyle("-fx-text-fill: #F44336; -fx-font-weight: bold;");
+                        break;
+                    case GENERAL:
+                        setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+                        break;
+                    case PERIODONCISTA:
+                        setStyle("-fx-text-fill: #FF9800; -fx-font-weight: bold;");
+                        break;
+                    default:
+                        setStyle("");
+                }
+            }
+        });
     }
 
     private void configurarSelectores() {
@@ -73,15 +131,14 @@ public class DentifyController {
                 "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
                 "18:00", "18:30"
         );
-        // Estados
-        choiceBoxEstados.getItems().addAll("PENDIENTE", "ACTIVO", "CANCELADO");
-        choiceBoxEstados.setValue("PENDIENTE");
+
+        choiceBoxEstados.getItems().setAll(Estado.values());
+        choiceBoxEstados.setValue(Estado.PENDIENTE);
     }
 
     private void configurarColumnaAcciones() {
         colAcciones.setCellFactory(param -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
-
             {
                 btnEditar.getStyleClass().add("primary-button");
                 btnEditar.setOnAction(event -> {
@@ -93,11 +150,7 @@ public class DentifyController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(btnEditar);
-                }
+                setGraphic(empty ? null : btnEditar);
             }
         });
     }
@@ -114,7 +167,6 @@ public class DentifyController {
         TFTelefono.setText(p.getTelefono());
         TFCorreo.setText(p.getCorreoElectronico());
         TFNacimiento.setValue(p.getFechaNacimiento());
-
     }
 
     @FXML
@@ -125,12 +177,7 @@ public class DentifyController {
             pacienteAEditar.setTelefono(TFTelefono.getText());
             pacienteAEditar.setCorreoElectronico(TFCorreo.getText());
             pacienteAEditar.setFechaNacimiento(TFNacimiento.getValue());
-
-            System.out.println("Paciente actualizado: " + pacienteAEditar.getNombre());
-        } else {
-            System.out.println("Creando nuevo paciente...");
         }
-
         limpiarFormulario();
     }
 
@@ -141,7 +188,6 @@ public class DentifyController {
         TFTelefono.clear();
         TFCorreo.clear();
         TFNacimiento.setValue(null);
-
         lblTituloFormulario.setText("Agregar paciente");
         btnGuardar.setText("Guardar");
     }
@@ -181,7 +227,92 @@ public class DentifyController {
         if (cita.getEstado() != null) {
             choiceBoxEstados.setValue(cita.getEstado().name());
         }
-    } //CIERRE PREPARAR EDICION CITA
 
+        choiceBoxEstados.setValue(cita.getEstado());
+    }
 
-}//CIERRE DENTIFY CONTROLLER
+    @FXML
+    private void manejarGuardarCita() {
+        if (citaAEditar != null) {
+
+            LocalDate fecha = DatePickerFecha.getValue();
+            String horaSeleccionada = cboHora.getValue();
+
+            if (fecha != null && horaSeleccionada != null) {
+                LocalTime tiempo = LocalTime.parse(horaSeleccionada);
+                LocalDateTime fechaHoraCompleta = LocalDateTime.of(fecha, tiempo);
+
+                citaAEditar.setFecha(fecha);
+                citaAEditar.setHora(fechaHoraCompleta);
+            }
+
+            citaAEditar.setPaciente(choicePaciente.getValue());
+            citaAEditar.setDoctor(choiceDoctor.getValue());
+            citaAEditar.setMotivo(txtMotivo.getText());
+            citaAEditar.setEstado(choiceBoxEstados.getValue());
+
+            System.out.println("Cita actualizada correctamente.");
+            tablaCitas.refresh();
+        }
+        limpiarFormularioCita();
+    }
+
+    private void limpiarFormularioCita() {
+        citaAEditar = null;
+        DatePickerFecha.setValue(null);
+        cboHora.setValue(null);
+        choicePaciente.setValue(null);
+        choiceDoctor.setValue(null);
+        txtMotivo.clear();
+        choiceBoxEstados.setValue(Estado.PENDIENTE);
+
+        lblTituloCita.setText("Agregar cita");
+        btnGuardarCita.setText("Guardar");
+    }
+
+    private void configurarColumnaAccionesCitas() {
+        colAccionesCitas.setCellFactory(param -> new TableCell<>() {
+            private final Button btnEditar = new Button("✏️");
+            private final Button btnEliminar = new Button("🗑️");
+            private final HBox contenedor = new HBox(10, btnEditar, btnEliminar);
+
+            {
+                btnEditar.getStyleClass().add("primary-button");
+                btnEliminar.getStyleClass().add("danger-button");
+
+                btnEditar.setOnAction(event -> {
+                    Cita seleccionado = getTableView().getItems().get(getIndex());
+                    prepararEdicionCita(seleccionado);
+                });
+
+                btnEliminar.setOnAction(event -> {
+                    Cita seleccionado = getTableView().getItems().get(getIndex());
+                    confirmarEliminarCita(seleccionado);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(contenedor);
+                }
+            }
+        });
+    }
+
+    private void confirmarEliminarCita(Cita cita) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar eliminación");
+        alert.setHeaderText("¿Estás seguro de eliminar la cita #" + cita.getIdCita() + "?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            // Aquí se tiene que llamar a CitaDAO para eliminar
+            tablaCitas.getItems().remove(cita);
+            System.out.println("Cita eliminada: " + cita.getIdCita());
+        }
+    }
+}

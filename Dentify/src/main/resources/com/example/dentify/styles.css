@@ -172,3 +172,49 @@
 .text-field-custom {
     -fx-pref-height: 45px;
 }
+
+.danger-button {
+    -fx-background-color: #d9534f;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 40px;
+    -fx-pref-width: 45px;
+    -fx-padding: 8px;
+}
+
+.danger-button:hover {
+    -fx-background-color: #c9302c;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.danger-button:pressed {
+    -fx-background-color: #ac2925;
+}
+
+.primary-button-table {
+    -fx-background-color: #0A3459;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-size: 13px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 40px;
+    -fx-pref-width: 45px;
+    -fx-padding: 8px;
+}
+
+.primary-button-table:hover {
+    -fx-background-color: #0FA6A6;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.text-field-error {
+    -fx-border-color: #d9534f;
+    -fx-border-width: 2px;
+}

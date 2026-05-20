@@ -10,7 +10,7 @@ public class Cita {
     private LocalDate fecha;
     private LocalDateTime hora;
     private String motivo;
-    private Estado Estado;
+    private Estado Estado; // Mantenemos el atributo según tu declaración
 
     // ATRIBUTOS DE COMPOSICIÓN
     private Paciente paciente;
@@ -49,18 +49,15 @@ public class Cita {
     public Estado getEstado() { return Estado; }
     public void setEstado(Estado Estado) { this.Estado = Estado; }
 
-    // GETTERS Y SETTERS DE OBJETOS COMPLETOS
     public Paciente getPaciente() { return paciente; }
     public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
     public Doctor getDoctor() { return doctor; }
     public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
-    // MÉTODOS PUENTE PARA EVITAR ERRORES DE ID
-
-
+    // MÉTODOS PUENTE CORREGIDOS CON LA NOMENCLATURA DE ANDREA
     public int getIdPaciente() {
-        return (paciente != null) ? paciente.getIdPaciente() : 0;
+        return (paciente != null) ? paciente.getId_paciente() : 0; // Cambiado a getId_paciente()
     }
 
     public int getIdDoctor() {
@@ -73,34 +70,31 @@ public class Cita {
     public String getObservaciones() { return observaciones; }
     public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
 
-    //METODOS DE VALIDACION
+    // MÉTODO PARA VALIDAR
+    public boolean esValida() {
+        // 1. Verificaciones básicas de nulos
+        if (this.fecha == null || this.hora == null) return false;
+        if (this.motivo == null || this.motivo.trim().isEmpty()) return false;
+        if (this.paciente == null || this.doctor == null) return false;
+        if (this.getIdPaciente() <= 0 || this.getIdDoctor() <= 0) return false;
 
-    // Mi método para validar si los datos de la cita tienen sentido con la nueva estructura
-public boolean esValida() {
-    // 1. Verifico que las fechas no sean nulas
-    if (this.fecha == null || this.hora == null) return false;
+        // 2. Control del tiempo: No citas en el pasado real (Fecha y Hora juntas)
+        if (this.hora.isBefore(LocalDateTime.now())) return false;
 
-    // 2. No permito citas en el pasado
-    if (this.fecha.isBefore(LocalDate.now())) return false;
+        // 3. Control de Horario Comercial (Ejemplo: 9:00 a 20:00)
+        int horaInt = this.hora.getHour();
+        if (horaInt < 9 || horaInt >= 20) return false;
 
-    // 3. Valido que el motivo tenga contenido real
-    if (this.motivo == null || this.motivo.trim().isEmpty()) return false;
+        // 4. Control de fines de semana (Evitar Sábados y Domingos si la clínica cierra)
+        java.time.DayOfWeek dia = this.fecha.getDayOfWeek();
+        if (dia == java.time.DayOfWeek.SATURDAY || dia == java.time.DayOfWeek.SUNDAY) return false;
 
-    // 4. NUEVA VALIDACIÓN: Los objetos Paciente y Doctor deben existir
-    if (this.paciente == null || this.doctor == null) return false;
-
-    // 5. Verifico que sus IDs internos sean correctos (usando tus métodos puente)
-    return this.getIdPaciente() > 0 && this.getIdDoctor() > 0;
-
-}//CIERRE METODO VALIDACION DATOS CITA
-
-
+        return true;
+    }
 
     // TOSTRING
     @Override
     public String toString() {
         return "Cita #" + idCita + " | Paciente: " + (paciente != null ? paciente.getNombre() : "N/A");
     }
-
-
 }

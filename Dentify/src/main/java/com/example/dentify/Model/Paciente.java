@@ -4,28 +4,31 @@ import java.time.LocalDate;
 
 public class Paciente {
 
-    private int idPaciente;
+    private int id_paciente;
     private String nombre;
     private String apellido;
     private String telefono;
-    private String correoElectronico;
-    private LocalDate fechaNacimiento;
+    private String correo_electronico;
+    private LocalDate fecha_nacimiento;
 
-    public Paciente(int idPaciente, String nombre, String apellido, String telefono, String correoElectronico, LocalDate fechaNacimiento) {
-        this.idPaciente = idPaciente;
+    public Paciente(int id_paciente, String nombre, String apellido, String telefono, String correo_electronico, LocalDate fecha_nacimiento) {
+        this.id_paciente = id_paciente;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
-        this.correoElectronico = correoElectronico;
-        this.fechaNacimiento = fechaNacimiento;
+        this.correo_electronico = correo_electronico;
+        this.fecha_nacimiento = fecha_nacimiento;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
+        public Paciente(){
+        }
+
+    public int getId_paciente() {
+        return id_paciente;
     }
 
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setId_paciente(int id_paciente) {
+        this.id_paciente = id_paciente;
     }
 
     public String getNombre() {
@@ -52,20 +55,20 @@ public class Paciente {
         this.telefono = telefono;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public String getCorreo_electronico() {
+        return correo_electronico;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setCorreo_electronico(String correo_electronico) {
+        this.correo_electronico = correo_electronico;
     }
 
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
+    public LocalDate getFecha_nacimiento() {
+        return fecha_nacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+    public void setFecha_nacimiento(LocalDate fecha_nacimiento) {
+        this.fecha_nacimiento = fecha_nacimiento;
     }
 
     @Override

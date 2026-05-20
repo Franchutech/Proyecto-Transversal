@@ -1,9 +1,6 @@
 package com.example.dentify;
 
-import com.example.dentify.Model.Cita;
-import com.example.dentify.Model.Doctor;
-import com.example.dentify.Model.Estado;
-import com.example.dentify.Model.Paciente;
+import com.example.dentify.Model.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -37,10 +34,15 @@ public class DentifyController {
     @FXML private TextField TFCorreo;
     @FXML private DatePicker TFNacimiento;
     @FXML private Button btnGuardar;
-
-    // ------ Tabla de Pacientes ------
     @FXML private TableView<Paciente> tablaPacientes;
     @FXML private TableColumn<Paciente, Void> colAcciones;
+
+
+    // ------- Elementos de Doctores ---------
+    @FXML private TableView<Doctor> tablaDoctores;
+    @FXML private TableColumn<Doctor, Integer> colIdDoctor;
+    @FXML private TableColumn<Paciente, String> colNombreDoctor;
+    @FXML private TableColumn<Doctor, Especialidad> colEspecialidad;
 
     // Objetos auxiliares para saber si estamos editando
     private Paciente pacienteAEditar = null;
@@ -52,6 +54,73 @@ public class DentifyController {
         configurarSelectores();
         configurarColumnaAcciones();
         configurarColumnaAccionesCitas();
+    }
+
+    private void configurarColumnaEspecialidad() {
+        // Configurar cómo obtener el valor del enum desde el objeto Doctor
+        colEspecialidad.setCellValueFactory(cellData -> {
+            Especialidad esp = cellData.getValue().getEspecialidad();
+            return new SimpleObjectProperty<>(esp);
+        });
+
+        // Configurar cómo se muestra visualmente el enum
+        colEspecialidad.setCellFactory(column -> new TableCell<Doctor, Especialidad>() {
+            @Override
+            protected void updateItem(Especialidad item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    // Convertir el enum a texto legible
+                    String textoMostrar = formatearEspecialidad(item);
+                    setText(textoMostrar);
+
+                    // Opcional: Aplicar colores según la especialidad
+                    aplicarColorSegunEspecialidad(item);
+                }
+            }
+
+            private String formatearEspecialidad(Especialidad esp) {
+                switch (esp) {
+                    case ENDODONCITAS:
+                        return "Endodoncia";
+                    case ORTODONCISTA:
+                        return "Ortodoncia";
+                    case CIRUGIA:
+                        return "Cirugía Maxilofacial";
+                    case GENERAL:
+                        return "Odontología General";
+                    case PERIODONCISTA:
+                        return "Periodoncia";
+                    default:
+                        return esp.name();
+                }
+            }
+
+            private void aplicarColorSegunEspecialidad(Especialidad esp) {
+                switch (esp) {
+                    case ENDODONCITAS:
+                        setStyle("-fx-text-fill: #9C27B0; -fx-font-weight: bold;");
+                        break;
+                    case ORTODONCISTA:
+                        setStyle("-fx-text-fill: #2196F3; -fx-font-weight: bold;");
+                        break;
+                    case CIRUGIA:
+                        setStyle("-fx-text-fill: #F44336; -fx-font-weight: bold;");
+                        break;
+                    case GENERAL:
+                        setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+                        break;
+                    case PERIODONCISTA:
+                        setStyle("-fx-text-fill: #FF9800; -fx-font-weight: bold;");
+                        break;
+                    default:
+                        setStyle("");
+                }
+            }
+        });
     }
 
     private void configurarSelectores() {

@@ -33,6 +33,9 @@ public class Cita {
         this.observaciones = observaciones;
     }
 
+    public Cita() {
+}
+
     // GETTERS Y SETTERS
     public int getIdCita() { return idCita; }
     public void setIdCita(int idCita) { this.idCita = idCita; }

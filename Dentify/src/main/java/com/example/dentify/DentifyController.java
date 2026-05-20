@@ -1,6 +1,7 @@
 package com.example.dentify;
 
 import com.example.dentify.Model.*;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -13,17 +14,25 @@ import java.time.LocalTime;
 
 public class DentifyController {
 
-    // ------ Elementos de Citas ------
+    // ------ Elementos de Citas ------(EN PROCESO CON FRANCELLA, CONSULTARME ANTES DE MODIFICAR)
     @FXML private ChoiceBox<Estado> choiceBoxEstados;
     @FXML private ChoiceBox<Paciente> choicePaciente;
     @FXML private ChoiceBox<Doctor> choiceDoctor;
     @FXML private ComboBox<String> cboHora;
     @FXML private Label lblTituloCita;
     @FXML private Button btnGuardarCita;
+    @FXML private Button btnNuevo;//AGREGADO POR FRANCELLA
     @FXML private DatePicker DatePickerFecha;
     @FXML private TextArea txtMotivo;
     @FXML private TableView<Cita> tablaCitas;
     @FXML private TableColumn<Cita, Void> colAccionesCitas;
+    @FXML private TableColumn<Cita, Integer> colId;
+    @FXML private TableColumn<Cita, LocalDate> colFecha;
+    @FXML private TableColumn<Cita, LocalDateTime> colHora;
+    @FXML private TableColumn<Cita, String> colPaciente;
+    @FXML private TableColumn<Cita, String> colDoctor;
+    @FXML private TableColumn<Cita, String> colMotivo;
+    @FXML private TableColumn<Cita, Estado> colEstado;
 
 
     // ------ Elementos de Pacientes (Formulario) ------
@@ -54,6 +63,11 @@ public class DentifyController {
         configurarSelectores();
         configurarColumnaAcciones();
         configurarColumnaAccionesCitas();
+        configurarColumnasCitas(); // AÑADIDO POR FRANCELLA
+        cargarDatosDePruebaCitas();//AÑADIDO POR FRANCELLA
+
+        btnNuevo.setOnAction(event -> manejarNuevaCita());//AÑADIDO POR FRANCELLA
+
     }
 
     private void configurarColumnaEspecialidad() {
@@ -206,30 +220,26 @@ public class DentifyController {
     //GESTION CITAS EN PROCESO CON FRANCELLA
 
     public void prepararEdicionCita(Cita cita) {
-        this.citaAEditar = cita;
+            this.citaAEditar = cita;
 
-        lblTituloCita.setText("Editar cita #" + cita.getIdCita());
-        btnGuardarCita.setText("Actualizar datos"); // Más claro para el usuario
+            lblTituloCita.setText("Editar cita #" + cita.getIdCita());
+            btnGuardarCita.setText("Actualizar datos");
 
-        DatePickerFecha.setValue(cita.getFecha());
+            DatePickerFecha.setValue(cita.getFecha());
 
-        // CORRECCIÓN: Sacamos la hora formateada en "HH:mm" para el ComboBox
-        if (cita.getHora() != null) {
-            String horaFormateada = String.format("%02d:%02d", cita.getHora().getHour(), cita.getHora().getMinute());
-            cboHora.setValue(horaFormateada);
+            if (cita.getHora() != null) {
+                String horaFormateada = String.format("%02d:%02d", cita.getHora().getHour(), cita.getHora().getMinute());
+                cboHora.setValue(horaFormateada);
+            }
+
+            choicePaciente.setValue(cita.getPaciente());
+            choiceDoctor.setValue(cita.getDoctor());
+            txtMotivo.setText(cita.getMotivo());
+
+            if (cita.getEstado() != null) {
+                choiceBoxEstados.setValue(cita.getEstado());
+            }
         }
-
-        choicePaciente.setValue(cita.getPaciente());
-        choiceDoctor.setValue(cita.getDoctor());
-        txtMotivo.setText(cita.getMotivo());
-
-        // CORRECCIÓN: Pasamos el Enum a String para el ChoiceBox
-        if (cita.getEstado() != null) {
-            choiceBoxEstados.setValue(cita.getEstado().name());
-        }
-
-        choiceBoxEstados.setValue(cita.getEstado());
-    }
 
     @FXML
     private void manejarGuardarCita() {
@@ -314,5 +324,103 @@ public class DentifyController {
             tablaCitas.getItems().remove(cita);
             System.out.println("Cita eliminada: " + cita.getIdCita());
         }
-    }
+    }//CIERRE CONFIRMAR ELIMINAR CITA
+
+    //METODO CONFIGURACION COLUMNAS CITAS
+
+    private void configurarColumnasCitas() {
+    // Vincular columnas con tipos de datos básicos y Enums
+    colId.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getIdCita()));
+    colFecha.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getFecha()));
+    colMotivo.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMotivo()));
+    colEstado.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getEstado()));
+
+    //  Configurar columna de Hora: Origen del dato bruto (LocalDateTime)
+    colHora.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getHora()));
+
+    // Configurar columna de Hora: Factoría de celda para formatear visualmente a texto "HH:mm"
+    colHora.setCellFactory(column -> new TableCell<Cita, LocalDateTime>() {
+        @Override
+        protected void updateItem(LocalDateTime item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setText(null);
+            } else {
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+                setText(item.format(formatter));
+            }
+        }
+    });
+
+    // Mapear el objeto Paciente para extraer el String (Nombre + Apellido)
+    colPaciente.setCellValueFactory(cellData -> {
+        Paciente p = cellData.getValue().getPaciente();
+        return new javafx.beans.property.SimpleStringProperty(p != null ? p.getNombre() + " " + p.getApellido() : "");
+    });
+
+    // Mapear el objeto Doctor para extraer el String (Nombre)
+    colDoctor.setCellValueFactory(cellData -> {
+        Doctor d = cellData.getValue().getDoctor();
+        return new javafx.beans.property.SimpleStringProperty(d != null ? d.getNombre() : "");
+    });
+}  //CIERRE METODO CONFIGURAR COLUMNAS CITAS
+
+    @FXML
+    private void manejarNuevaCita() {
+        // Pongo el formulario en modo "Agregar" limpiando cualquier residuo de edición
+        limpiarFormularioCita();
+
+        // Aquí irá la lógica para cambiar la vista al FXML del formulario (CitasForm.fxml)
+        System.out.println("Cambiando a la vista de formulario de citas...");
+
+    }//CIERRE METODO MANEJAR NUEVA CITA
+
+
+    //METODO DE INYECCION DE DATOS PARA PRUEBAS DE CAMBIO DE INTERFAZ CON EL MISMO CONTROLLER
+
+private void cargarDatosDePruebaCitas() {
+    // 1. Datos simulados de Pacientes
+    Paciente p1 = new Paciente(1, "Francella", "Rojas", "123456789",
+            "fran@test.com", LocalDate.of(2000, 1, 1));
+    Paciente p2 = new Paciente(2, "Juan", "David", "987654321",
+            "juan@test.com", LocalDate.of(1998, 5, 10));
+
+    // 2. Datos simulados de Doctores USO EL CONSTRUCTOR VACIO
+    Doctor d1 = new Doctor();
+    d1.setIdDoctor(1);
+    d1.setNombre("Dr. Anuar");
+
+    Doctor d2 = new Doctor();
+    d2.setIdDoctor(2);
+    d2.setNombre("Dra. Andrea");
+
+    choicePaciente.getItems().addAll(p1, p2);
+    choiceDoctor.getItems().addAll(d1, d2);
+
+    // DATOS SIMULADOS CITAS USANDO CONSTRUCTOR VACIO
+    LocalDateTime hora1 = LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 0));
+    LocalDateTime hora2 = LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 30));
+
+    Cita c1 = new Cita();
+    c1.setIdCita(1);
+    c1.setPaciente(p1);
+    c1.setDoctor(d1);
+    c1.setFecha(LocalDate.now());
+    c1.setHora(hora1);
+    c1.setMotivo("Revisión rutinaria");
+    c1.setEstado(Estado.PENDIENTE);
+
+    Cita c2 = new Cita();
+    c2.setIdCita(2);
+    c2.setPaciente(p2);
+    c2.setDoctor(d2);
+    c2.setFecha(LocalDate.now().plusDays(1));
+    c2.setHora(hora2);
+    c2.setMotivo("Ajuste de ortodoncia");
+    c2.setEstado(Estado.ACTIVO); // ACTIVO ERA EL CORRECTO
+
+    tablaCitas.getItems().addAll(c1, c2);
 }
+
+}//CIERRE DENTIFY CONTROLLER

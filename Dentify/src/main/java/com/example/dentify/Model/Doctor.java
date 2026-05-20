@@ -21,6 +21,9 @@ public class Doctor {
         this.especialidad = especialidad;
     }
 
+    public Doctor() {
+}
+
     public int getIdDoctor() {
         return idDoctor;
     }

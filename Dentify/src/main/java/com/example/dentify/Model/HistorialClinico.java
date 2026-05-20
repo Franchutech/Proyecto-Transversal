@@ -37,7 +37,7 @@ public class HistorialClinico {
 
     // MÉTODO PUENTE (PARA EVITAR ERRORES CON EL ID)
     public int getIdPaciente() {
-        return (paciente != null) ? paciente.getIdPaciente() : 0;
+        return (paciente != null) ? paciente.getId_paciente(): 0;
     }
 
     public LocalDate getFechaCreacion() {

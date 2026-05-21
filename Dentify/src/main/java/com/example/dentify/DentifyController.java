@@ -66,6 +66,7 @@ public class DentifyController {
         configurarColumnasCitas(); // AÑADIDO POR FRANCELLA
         cargarDatosDePruebaCitas();//AÑADIDO POR FRANCELLA
 
+
         btnNuevo.setOnAction(event -> manejarNuevaCita());//AÑADIDO POR FRANCELLA
 
     }

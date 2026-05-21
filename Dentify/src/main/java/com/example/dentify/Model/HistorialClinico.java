@@ -18,6 +18,10 @@ public class HistorialClinico {
         this.grupoSanguineo = grupoSanguineo;
     }
 
+    //CONSTRUCTOR VACIO-PARA PERSISTENCIA DEL DAO
+    public HistorialClinico() {
+    }
+
     // GETTERS Y SETTERS
     public int getIdHistorialClinico() {
         return idHistorialClinico;

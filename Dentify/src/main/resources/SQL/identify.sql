@@ -118,6 +118,8 @@ INSERT INTO DOCTOR (id_doctor, nombre, id_especialidad, fecha_nacimiento, direcc
                                                                                                            (106, 'Dra. Marina Costa', 1, '1990-12-01', 'Paseo Marítimo 8, Málaga', 'COL-292906'), -- GENERAL
                                                                                                            (107, 'Dr. Pablo Jiménez', 4, '1975-03-22', 'Gran Vía 100, Bilbao', 'COL-484807'); -- CIRUGIA
 
+
+
 INSERT INTO PACIENTE (nombre, apellido, telefono, correo_electronico, fecha_nacimiento) VALUES
                                                                                             ('Oscar', 'Lanza', '632985963', 'oscar1@gmail.com', '2001-03-03'),
                                                                                             ('Jeremis', 'Alexandre', '759862354', 'jeremis@gmail.com', '2003-08-07'),

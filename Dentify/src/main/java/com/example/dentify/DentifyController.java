@@ -4,6 +4,7 @@ import com.example.dentify.Model.Cita;
 import com.example.dentify.Model.Doctor;
 import com.example.dentify.Model.Paciente;
 import com.example.dentify.dao.PacienteDAO;
+import javafx.scene.input.MouseEvent;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -32,10 +33,15 @@ public class DentifyController {
     @FXML private TextField TFCorreo;
     @FXML private DatePicker TFNacimiento;
     @FXML private Button btnGuardar;
+    @FXML private TableColumn<Paciente, Integer> colId;
+    @FXML private TableColumn<Paciente, String> colNombre;
+    @FXML private TableColumn<Paciente, String> colApellido;
+    @FXML private TableColumn<Paciente, String> colTelefono;
+    @FXML private TableColumn<Paciente, String> colCorreo;
+    @FXML private TableColumn<Paciente, Void> colAcciones;
 
     // ------ Tabla de Pacientes ------
     @FXML private TableView<Paciente> tablaPacientes;
-    @FXML private TableColumn<Paciente, Void> colAcciones;
 
     // Objeto auxiliar para saber si estamos editando
     private Paciente pacienteAEditar = null;
@@ -44,16 +50,24 @@ public class DentifyController {
 
     @FXML
     public void initialize() {
-        // Configuracion de combos y selectores (Solo si existen en la pantalla actual)
         configurarSelectores();
 
-        // Configuracion de la columna de acciones (Solo si la tabla está en la pantalla)
         if (colAcciones != null) {
             configurarColumnaAcciones();
         }
 
-        // Cargar los pacientes (Solo si la tabla existe en la pantalla)
         if (tablaPacientes != null) {
+            // --- 🛠️ VINCULACIÓN DE COLUMNAS (Añade esto aquí) ---
+            // El texto entre comillas debe coincidir EXACTAMENTE con el nombre de los atributos en tu clase Paciente.java
+            // Por ejemplo, si en Paciente tienes private String nombre; pones "nombre"
+            colId.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("id_paciente"));
+            colNombre.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("nombre"));
+            colApellido.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("apellido"));
+            colTelefono.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("telefono"));
+            colCorreo.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("correo_electronico"));
+            // ---------------------------------------------------
+
+            System.out.println("Cargando pacientes desde la base de datos MySQL...");
             cargarPacientes();
         }
     }
@@ -102,7 +116,26 @@ public class DentifyController {
 
     // ------ GESTION PACIENTES ------
 
-    // Metodo
+    // Al pulsar el botón "Gestión Pacientes" en la pantalla de inicio -> Abre la tabla
+    @FXML
+    private void onGesPacientesButtonClick(javafx.event.ActionEvent event) {
+        try {
+            // Cargamos el archivo de la tabla de pacientes
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("Pacientes.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            // Conseguimos la ventana actual y le cambiamos la escena
+            javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Dentify - Gestión de Pacientes");
+            stage.show();
+        } catch (java.io.IOException e) {
+            System.err.println("Error al abrir la gestión de pacientes (Pacientes.fxml): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Metodo para que el usuario pueda editar a un paciente
     public void prepararEdicion(Paciente p) {
         this.pacienteAEditar = p;
         lblTituloFormulario.setText("Editar Paciente");
@@ -119,8 +152,9 @@ public class DentifyController {
     @FXML
     private void manejarGuardarPaciente() {
         // VALIDACION PARA QUE NO PUEDAN DEJAR LOS DATOS EN BLANCO
+        //comprueba si alguno de los campos está vacío
         if (TFNombre.getText().trim().isEmpty() || TFApellido.getText().trim().isEmpty() || TFTelefono.getText().trim().isEmpty()) {
-            //ABRE UNA VENTANA DE ERROR
+            //ABRE UNA VENTANA DE ERROR, si se cumple la condición anterior
             Alert alerta = new Alert(Alert.AlertType.WARNING, "Por favor, rellena los campos obligatorios: Nombre, Apellido y Teléfono.");
             alerta.showAndWait();
             return;
@@ -136,7 +170,7 @@ public class DentifyController {
 
             System.out.println("Paciente actualizado en memoria: " + pacienteAEditar.getNombre());
             // PENDIENTE: Cuando hagamos el metodo update, llamaremos aquí a PacienteDAO.updatePaciente(pacienteAEditar);
-        } else {
+        } else {//SI ES UN PACIENTE NUEVO
             //Construimos el paciente
             Paciente nuevo = new Paciente(
                     0,
@@ -177,10 +211,60 @@ public class DentifyController {
         btnGuardar.setText("Guardar");
     }
 
-    // Conectado con tu backend de forma limpia
+    // Conectado con el backend de forma limpia
     private void cargarPacientes() {
         List<Paciente> lista = PacienteDAO.getAllpacientes();
         tablaPacientes.getItems().setAll(lista);
+    }
+
+    // 1. Al pulsar el botón verde "+ Nuevo Paciente" en la tabla -> Abre el formulario
+    @FXML
+    private void onNuevoPacienteButtonClick(javafx.event.ActionEvent event) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("PacientesForm.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Dentify - Agregar Paciente");
+            stage.show();
+        } catch (java.io.IOException e) {
+            System.err.println("Error al abrir el formulario (PacientesForm.fxml): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Al pulsar la flechita de volver en el formulario -> Regresa a la tabla de pacientes
+    @FXML
+    private void onVolverPacientesFormButtonClick(javafx.event.ActionEvent event) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("Pacientes.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Dentify - Gestión de Pacientes");
+            stage.show();
+        } catch (java.io.IOException e) {
+            System.err.println("Error al volver a la tabla (Pacientes.fxml): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    // Al pulsar la flechita de volver en el formulario -> Regresa a la página principal
+    @FXML
+    private void onVolverPacientesButtonClick(javafx.event.ActionEvent event) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("Main.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Dentify - Gestión de Pacientes");
+            stage.show();
+        } catch (java.io.IOException e) {
+            System.err.println("Error al volver a la tabla (Main.fxml): " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 

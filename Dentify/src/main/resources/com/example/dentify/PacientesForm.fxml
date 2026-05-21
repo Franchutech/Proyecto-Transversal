@@ -20,7 +20,7 @@
                 <Insets left="30.0" />
             </padding>
             <children>
-                <Button fx:id="btnVolver" prefHeight="57.0" prefWidth="62.0" styleClass="back-button">
+                <Button fx:id="btnVolver" onAction="#onVolverPacientesFormButtonClick" prefHeight="57.0" prefWidth="62.0" styleClass="back-button">
                     <graphic>
                         <ImageView fx:id="btnFlechaVolver" fitHeight="106.0" fitWidth="102.0" pickOnBounds="true" preserveRatio="true">
                             <image>
